@@ -1,4 +1,5 @@
 const carService = require("../../../services/carService");
+const cloudinary = require("../../../../config/cloudinary")
 
 module.exports = {
     list(req, res) {
@@ -39,6 +40,11 @@ module.exports = {
     },
 
     update(req, res) {
+        carService.get(req.params.id)
+            .then(car => {
+                // Delete image from cloudinary to prevent storage bloating
+                cloudinary.uploader.destroy(`${CLOUDINARY_DIR}/${car.image_id}`)
+            })
         carService
             .update(req.params.id, req.body)
             .then(() => {
@@ -73,6 +79,11 @@ module.exports = {
     },
 
     destroy(req, res) {
+        carService.get(req.params.id)
+            .then(car => {
+                // Delete image from cloudinary to prevent storage bloating
+                cloudinary.uploader.destroy(`${CLOUDINARY_DIR}/${car.image_id}`)
+            })
         carService
             .delete(req.params.id)
             .then(() => {
@@ -88,4 +99,36 @@ module.exports = {
                 });
             });
     },
+
+    uploadImage(req, res) {
+        // require Multer middleware
+        const public_id = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        const fileBase64 = req.file.buffer.toString("base64");
+        const file = `data:${req.file.mimetype};base64,${fileBase64}`;
+        const UPLOAD_DIR_NAME = "bcr_car-management-api_cars"
+
+        cloudinary.uploader
+            .upload(file, {
+                height: 160, width: 270, crop: "fit",
+                folder: UPLOAD_DIR_NAME, public_id: public_id
+            })
+            .then(result => {
+                res.status(201).json({
+                    status: "success",
+                    message: "Upload image successfully",
+                    data: {
+                        url: result.url,
+                        public_id: public_id
+                    }
+                });
+            })
+            .catch(err => {
+                res.status(422)
+                    .json({
+                        status: "failed",
+                        message: err.message
+                    })
+            })
+
+    }
 };
