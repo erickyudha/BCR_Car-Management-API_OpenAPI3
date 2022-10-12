@@ -22,13 +22,6 @@ app.use(morgan("dev"))
 app.use(express.json());
 
 /** Install Router */
-// app.use(router);
-
-app.get("", (req, res) => {
-    res.status(200).json({
-        status: "success",
-        message: "Oii"
-    })
-})
+app.use(router);
 
 module.exports = app;
