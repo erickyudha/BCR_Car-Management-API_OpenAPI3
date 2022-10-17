@@ -21,8 +21,24 @@ module.exports = {
             });
     },
 
+    show(req, res) {
+        carService
+            .get(req.params.id)
+            .then((car) => {
+                res.status(200).json({
+                    status: "success",
+                    data: car,
+                });
+            })
+            .catch((err) => {
+                res.status(422).json({
+                    status: "failed",
+                    message: err.message,
+                });
+            });
+    },
+
     create(req, res) {
-        // TODO: ADD USER THAT USE THIS
         carService
             .create({
                 ...req.body,

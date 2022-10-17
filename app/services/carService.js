@@ -51,7 +51,9 @@ module.exports = {
         }
     },
 
-    get(id) {
-        return carRepository.find(id);
+    async get(id) {
+        const car = await carRepository.find(id)
+        const formattedCar = await formatCarData(car)
+        return formattedCar;
     },
 };

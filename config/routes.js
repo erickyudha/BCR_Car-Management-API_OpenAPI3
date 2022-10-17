@@ -1,5 +1,6 @@
 const express = require("express");
 const controllers = require("../app/controllers");
+const { carController } = require("../app/controllers/api/v1");
 const upload = require("./upload")
 
 const apiRouter = express.Router();
@@ -24,27 +25,25 @@ apiRouter.post("/api/v1/images",
     upload.single("image"),
     controllers.api.v1.imageController.upload);
 
-apiRouter.get("/api/v1/cars",
-    controllers.api.v1.authController.authorizeMember,
-    controllers.api.v1.carController.list)
-apiRouter.post("/api/v1/cars",
-    controllers.api.v1.authController.authorizeMember,
-    controllers.api.v1.carController.create)
-
 // * Superadmin auth    
 apiRouter.post("/api/v1/admins",
     controllers.api.v1.authController.authorizeSuper,
     controllers.api.v1.userController.registerAdmin)
 
-// car routes
-/* 
-apiRouter.get("/api/v1/cars", controllers.api.v1.carController.list);
-apiRouter.post("/api/v1/cars", controllers.api.v1.carController.create);
-apiRouter.put("/api/v1/cars/:id", controllers.api.v1.carController.update);
-apiRouter.get("/api/v1/cars/:id", controllers.api.v1.carController.show);
-apiRouter.delete("/api/v1/cars/:id", controllers.api.v1.carController.destroy);
-apiRouter.post("/api/v1/cars/image", upload.single("image"), controllers.api.v1.carController.uploadImage);
- */
+
+// car control routes
+// * member auth
+apiRouter.get("/api/v1/cars",
+    controllers.api.v1.authController.authorizeMember,
+    controllers.api.v1.carController.list);
+apiRouter.get("/api/v1/cars/:id",
+    controllers.api.v1.authController.authorizeMember,
+    controllers.api.v1.carController.show)
+
+// * admin auth
+apiRouter.post("/api/v1/cars",
+    controllers.api.v1.authController.authorizeAdmin,
+    controllers.api.v1.carController.create)
 
 // test routes
 // apiRouter.post("/test", controllers.api.v1.userController.checkEmail)
