@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const personService = require("../../../services/personService");
+const userService = require("../../../services/userService");
 const SALT = 10;
 
 function encryptPassword(password) {
@@ -30,34 +30,42 @@ function checkPassword(encrypted_pass, password) {
 }
 
 function createToken(payload) {
-    return jwt.sign(payload, process.env.JWT_SIGNATURE_KEY || "Rahasia");
+    return jwt.sign(payload, process.env.JWT_SIGNATURE_KEY || "Rahasiasss");
+}
+
+async function register(req, res, role) {
+    const email = req.body.email;
+    const name = req.body.name;
+    const encrypted_pass = await encryptPassword(req.body.password);
+    const user = await userService.create({ name, email, encrypted_pass, role });
+    res.status(201).json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+    });
 }
 
 module.exports = {
-    async register(req, res) {
-        const email = req.body.email;
-        const encrypted_pass = await encryptPassword(req.body.password);
-        const role = "user";
-        const user = await personService.create({ email, encrypted_pass, role });
-        res.status(201).json({
-            id: user.id,
-            email: user.email,
-            role: role,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-        });
+    async registerUser(req, res) {
+        register(req, res, "user");
+    },
+
+    async registerAdmin(req, res) {
+        register(req, res, "admin");
     },
 
     async login(req, res) {
-        const email = req.body.email.toLowerCase(); // Biar case insensitive
+        const email = req.body.email.toLowerCase();
         const password = req.body.password;
-
-        const user = personService.getByEmail(email);
+        const user = await userService.getByEmail(email);
 
         if (!user) {
             res.status(404).json({
                 status: "failed",
-                message: "Email tidak ditemukan"
+                message: "Email not found"
             });
             return;
         }
@@ -68,7 +76,10 @@ module.exports = {
         );
 
         if (!isPasswordCorrect) {
-            res.status(401).json({ message: "Password salah!" });
+            res.status(401).json({
+                status: "failed",
+                message: "Wrong password"
+            });
             return;
         }
 
@@ -80,11 +91,16 @@ module.exports = {
         });
 
         res.status(201).json({
-            id: user.id,
-            email: user.email,
-            token,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
+            status: "success",
+            message: "login successfully",
+            data: {
+                id: user.id,
+                email: user.email,
+                role: user.role,
+                token,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+            }
         });
     },
 
@@ -98,10 +114,10 @@ module.exports = {
             const token = bearerToken.split("Bearer ")[1];
             const tokenPayload = jwt.verify(
                 token,
-                process.env.JWT_SIGNATURE_KEY || "Rahasia"
+                process.env.JWT_SIGNATURE_KEY || "Rahasiasss"
             );
 
-            req.user = await User.findByPk(tokenPayload.id);
+            req.user = await userService.get(tokenPayload.id);
             next();
         } catch (err) {
             console.error(err);
@@ -110,5 +126,4 @@ module.exports = {
             });
         }
     },
-};
-
+}
