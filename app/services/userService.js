@@ -15,7 +15,7 @@ module.exports = {
             const users = await userRepository.findAll();
             const filteredUsers = []
             users.forEach(user => {
-                const tmp = { ...user.dataValues };
+                const tmp = user.dataValues;
                 delete tmp["encrypted_pass"];
                 filteredUsers.push(tmp);
             });

@@ -1,5 +1,4 @@
 const carService = require("../../../services/carService");
-const cloudinary = require("../../../../config/cloudinary")
 
 module.exports = {
     list(req, res) {
@@ -14,8 +13,9 @@ module.exports = {
                 });
             })
             .catch((err) => {
+                console.log(err);
                 res.status(400).json({
-                    status: "FAIL",
+                    status: "failed",
                     message: err.message,
                 });
             });
@@ -24,7 +24,11 @@ module.exports = {
     create(req, res) {
         // TODO: ADD USER THAT USE THIS
         carService
-            .create(req.body)
+            .create({
+                ...req.body,
+                createdByUser: req.user.id,
+                lastUpdatedByUser: req.user.id
+            })
             .then((car) => {
                 res.status(201).json({
                     status: "success",
@@ -40,101 +44,5 @@ module.exports = {
             });
     },
 
-    update(req, res) {
-        // TODO: ADD USER THAT USE THIS
-        carService.get(req.params.id)
-            .then(car => {
-                // Delete image from cloudinary to prevent storage bloating
-                cloudinary.uploader.destroy(`${CLOUDINARY_DIR}/${car.image_id}`)
-            })
-        carService
-            .update(req.params.id, req.body)
-            .then(() => {
-                res.status(200).json({
-                    status: "success",
-                    message: "Update car data successfully"
-                });
-            })
-            .catch((err) => {
-                res.status(422).json({
-                    status: "failed",
-                    message: err.message,
-                });
-            });
-    },
 
-    show(req, res) {
-        // TODO: ADD USER THAT USE THIS
-        carService
-            .get(req.params.id)
-            .then((car) => {
-                res.status(200).json({
-                    status: "success",
-                    data: car,
-                });
-            })
-            .catch((err) => {
-                res.status(422).json({
-                    status: "failed",
-                    message: err.message,
-                });
-            });
-    },
-
-    destroy(req, res) {
-        // TODO: ADD USER THAT USE THIS
-        // TODO: DELETE CAR MOVE TO ARCHIVE TABLE
-        carService.get(req.params.id)
-            .then(car => {
-                // Delete image from cloudinary to prevent storage bloating
-                cloudinary.uploader.destroy(`${CLOUDINARY_DIR}/${car.image_id}`)
-            })
-        carService
-            .delete(req.params.id)
-            .then(() => {
-                res.status(200).json({
-                    status: "success",
-                    message: "Delete car data successfully"
-                });
-            })
-            .catch((err) => {
-                res.status(422).json({
-                    status: "failed",
-                    message: err.message,
-                });
-            });
-    },
-
-    uploadImage(req, res) {
-        // FIXME: MAYBE MAKE OWN TABLES, -- NOT PRIORITY
-        // require Multer middleware
-        const public_id = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        const fileBase64 = req.file.buffer.toString("base64");
-        const file = `data:${req.file.mimetype};base64,${fileBase64}`;
-        const UPLOAD_DIR_NAME = "bcr_car-management-api_cars"
-
-        cloudinary.uploader
-            .upload(file, {
-                height: 160, width: 270, crop: "fit",
-                folder: UPLOAD_DIR_NAME, public_id: public_id
-            })
-            .then(result => {
-                res.status(201).json({
-                    status: "success",
-                    message: "Upload image successfully",
-                    data: {
-                        url: result.url,
-                        public_id: public_id
-                    }
-                });
-            })
-            .catch(err => {
-                res.status(422)
-                    .json({
-                        status: "failed",
-                        message: err.message
-                    })
-            })
-
-    }
-};
+}

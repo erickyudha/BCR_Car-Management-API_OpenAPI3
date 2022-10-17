@@ -21,8 +21,11 @@ module.exports = {
       image_id: {
         type: Sequelize.INTEGER
       },
-      image_url: {
-        type: Sequelize.STRING
+      createdByUser: {
+        type: Sequelize.INTEGER
+      },
+      lastUpdatedByUser: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

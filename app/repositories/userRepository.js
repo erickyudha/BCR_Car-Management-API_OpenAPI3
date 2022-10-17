@@ -13,6 +13,10 @@ module.exports = {
         return User.findByPk(id);
     },
 
+    attributesFind(id, attributes) {
+        return User.findByPk(id, { attributes })
+    },
+
     findByEmail(email) {
         return User.findOne({ where: { email } })
     },

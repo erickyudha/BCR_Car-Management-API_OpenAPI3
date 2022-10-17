@@ -19,6 +19,18 @@ apiRouter.get("/api/v1/users",
     controllers.api.v1.authController.authorizeAdmin,
     controllers.api.v1.userController.list);
 
+apiRouter.post("/api/v1/images",
+    controllers.api.v1.authController.authorizeAdmin,
+    upload.single("image"),
+    controllers.api.v1.imageController.upload);
+
+apiRouter.get("/api/v1/cars",
+    controllers.api.v1.authController.authorizeMember,
+    controllers.api.v1.carController.list)
+apiRouter.post("/api/v1/cars",
+    controllers.api.v1.authController.authorizeMember,
+    controllers.api.v1.carController.create)
+
 // * Superadmin auth    
 apiRouter.post("/api/v1/admins",
     controllers.api.v1.authController.authorizeSuper,
