@@ -22,6 +22,7 @@ module.exports = {
     },
 
     create(req, res) {
+        // TODO: ADD USER THAT USE THIS
         carService
             .create(req.body)
             .then((car) => {
@@ -40,6 +41,7 @@ module.exports = {
     },
 
     update(req, res) {
+        // TODO: ADD USER THAT USE THIS
         carService.get(req.params.id)
             .then(car => {
                 // Delete image from cloudinary to prevent storage bloating
@@ -62,6 +64,7 @@ module.exports = {
     },
 
     show(req, res) {
+        // TODO: ADD USER THAT USE THIS
         carService
             .get(req.params.id)
             .then((car) => {
@@ -79,6 +82,8 @@ module.exports = {
     },
 
     destroy(req, res) {
+        // TODO: ADD USER THAT USE THIS
+        // TODO: DELETE CAR MOVE TO ARCHIVE TABLE
         carService.get(req.params.id)
             .then(car => {
                 // Delete image from cloudinary to prevent storage bloating
@@ -101,6 +106,7 @@ module.exports = {
     },
 
     uploadImage(req, res) {
+        // FIXME: MAYBE MAKE OWN TABLES, -- NOT PRIORITY
         // require Multer middleware
         const public_id = Date.now() + "-" + Math.round(Math.random() * 1e9);
         const fileBase64 = req.file.buffer.toString("base64");

@@ -1,13 +1,9 @@
-const { use } = require("../../config/routes");
+const { setRandomFallback } = require("bcryptjs");
 const userRepository = require("../repositories/userRepository");
 
 module.exports = {
     create(requestBody) {
         return userRepository.create(requestBody);
-    },
-
-    update(id, requestBody) {
-        return userRepository.update(id, requestBody);
     },
 
     delete(id) {
@@ -17,10 +13,16 @@ module.exports = {
     async list() {
         try {
             const users = await userRepository.findAll();
-            const userCount = await userRepository.getTotalCar();
+            const filteredUsers = []
+            users.forEach(user => {
+                const tmp = { ...user.dataValues };
+                delete tmp["encrypted_pass"];
+                filteredUsers.push(tmp);
+            });
+            const userCount = await userRepository.getTotalUser();
 
             return {
-                data: users,
+                data: filteredUsers,
                 count: userCount,
             };
         } catch (err) {
@@ -34,5 +36,10 @@ module.exports = {
 
     getByEmail(email) {
         return userRepository.findByEmail(email);
+    },
+
+    async isUserExist(email) {
+        const result = await userRepository.findByEmail(email);
+        return (result) ? true : false
     }
 };

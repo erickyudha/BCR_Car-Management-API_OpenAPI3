@@ -1,20 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userService = require("../../../services/userService");
-const SALT = 10;
 
-function encryptPassword(password) {
-    return new Promise((resolve, reject) => {
-        bcrypt.hash(password, SALT, (err, encrypted_pass) => {
-            if (!!err) {
-                reject(err);
-                return;
-            }
-
-            resolve(encrypted_pass);
-        });
-    });
-}
 
 function checkPassword(encrypted_pass, password) {
     return new Promise((resolve, reject) => {
@@ -33,30 +20,33 @@ function createToken(payload) {
     return jwt.sign(payload, process.env.JWT_SIGNATURE_KEY || "Rahasiasss");
 }
 
-async function register(req, res, role) {
-    const email = req.body.email;
-    const name = req.body.name;
-    const encrypted_pass = await encryptPassword(req.body.password);
-    const user = await userService.create({ name, email, encrypted_pass, role });
-    res.status(201).json({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: role,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-    });
+// Authorize base handler
+async function authorize(req, res, next, allowedRole) {
+    // allowedRole => Array of string, ex: ["member", "admin"]
+    try {
+        const bearerToken = req.headers.authorization;
+        const token = bearerToken.split("Bearer ")[1];
+        const tokenPayload = jwt.verify(
+            token,
+            process.env.JWT_SIGNATURE_KEY || "Rahasiasss"
+        );
+
+        const user = await userService.get(tokenPayload.id);
+        if (!allowedRole.includes(user.role)) {
+            throw new Error("Unauthorized")
+        }
+
+        req.user = user;
+        next();
+    } catch (err) {
+        res.status(401).json({
+            status: "failed",
+            message: "Unauthorized",
+        });
+    }
 }
 
 module.exports = {
-    async registerUser(req, res) {
-        register(req, res, "user");
-    },
-
-    async registerAdmin(req, res) {
-        register(req, res, "admin");
-    },
-
     async login(req, res) {
         const email = req.body.email.toLowerCase();
         const password = req.body.password;
@@ -104,26 +94,16 @@ module.exports = {
         });
     },
 
-    async whoAmI(req, res) {
-        res.status(200).json(req.user);
+    // Authorize middleware
+    async authorizeMember(req, res, next) {
+        authorize(req, res, next, ["member", "admin", "superadmin"]);
     },
 
-    async authorize(req, res, next) {
-        try {
-            const bearerToken = req.headers.authorization;
-            const token = bearerToken.split("Bearer ")[1];
-            const tokenPayload = jwt.verify(
-                token,
-                process.env.JWT_SIGNATURE_KEY || "Rahasiasss"
-            );
+    async authorizeAdmin(req, res, next) {
+        authorize(req, res, next, ["admin", "superadmin"]);
+    },
 
-            req.user = await userService.get(tokenPayload.id);
-            next();
-        } catch (err) {
-            console.error(err);
-            res.status(401).json({
-                message: "Unauthorized",
-            });
-        }
+    async authorizeSuper(req, res, next) {
+        authorize(req, res, next, ["superadmin"]);
     },
 }
