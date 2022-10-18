@@ -27,26 +27,20 @@ module.exports = {
       email: "super@admin.com",
       // password = "admin"
       encrypted_pass: encrypted_pass1,
-      role: "superadmin",
-      createdAt: new Date(),
-      updatedAt: new Date()
+      role: "superadmin"
     },
     {
       name: "Admin",
       email: "admin@admin.com",
       // password = "admin"
       encrypted_pass: encrypted_pass1,
-      role: "admin",
-      createdAt: new Date(),
-      updatedAt: new Date()
+      role: "admin"
     }, {
       name: "Member",
       email: "member@member.com",
       // password = "member"
       encrypted_pass: encrypted_pass2,
-      role: "member",
-      createdAt: new Date(),
-      updatedAt: new Date()
+      role: "member"
     }]);
   },
 
