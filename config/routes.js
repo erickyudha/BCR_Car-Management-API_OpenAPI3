@@ -44,6 +44,9 @@ apiRouter.post(["/api/v1/cars", "/api/cars"],
 apiRouter.put(["/api/v1/cars/:id", "/api/cars/:id"],
     controllers.api.v1.authController.authorizeAdmin,
     controllers.api.v1.carController.update)
+apiRouter.delete(["/api/v1/cars/:id", "/api/cars/:id"],
+    controllers.api.v1.authController.authorizeAdmin,
+    controllers.api.v1.carController.delete)
 
 apiRouter.post(["/api/v1/images", "/api/images"],
     controllers.api.v1.authController.authorizeAdmin,

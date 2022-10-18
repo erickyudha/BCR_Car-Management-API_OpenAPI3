@@ -22,8 +22,8 @@ module.exports = {
     },
 
     async show(req, res) {
-        const car = await carService.get(req.params.id)
-
+        const id = req.params.id;
+        const car = await carService.get(id)
         if (!car) {
             res.status(404).json({
                 status: "failed",
@@ -31,7 +31,7 @@ module.exports = {
             })
         } else {
             carService
-                .get(req.params.id)
+                .get(id)
                 .then((car) => {
                     res.status(200).json({
                         status: "success",
@@ -69,24 +69,58 @@ module.exports = {
             });
     },
 
-    update(req, res) {
-        carService
-            .update(req.params.id, {
-                ...req.body,
-                lastUpdatedByUser: req.user.id
+    async update(req, res) {
+        const id = req.params.id;
+        const car = await carService.get(id)
+        if (!car) {
+            res.status(404).json({
+                status: "failed",
+                message: "Car data not found"
             })
-            .then(() => {
-                res.status(200).json({
-                    status: "success",
-                    message: "Update car data successfully"
+        } else {
+            carService
+                .update(req.params.id, {
+                    ...req.body,
+                    lastUpdatedByUser: req.user.id
+                })
+                .then(() => {
+                    res.status(200).json({
+                        status: "success",
+                        message: "Update car data successfully"
+                    });
+                })
+                .catch((err) => {
+                    res.status(422).json({
+                        status: "failed",
+                        message: err.message,
+                    });
                 });
-            })
-            .catch((err) => {
-                res.status(422).json({
-                    status: "failed",
-                    message: err.message,
-                });
-            });
+        }
     },
 
+    async delete(req, res) {
+        const id = req.params.id;
+        const car = await carService.get(id)
+        if (!car) {
+            res.status(404).json({
+                status: "failed",
+                message: "Car data not found"
+            })
+        } else {
+            // TODO: ADD DELETED CAR TO CAR ARCHIVE
+            carService.delete(id)
+                .then(() => {
+                    res.status(200).json({
+                        status: "success",
+                        message: "Delete car data successfully"
+                    });
+                })
+                .catch((err) => {
+                    res.status(422).json({
+                        status: "failed",
+                        message: err.message,
+                    });
+                });
+        }
+    }
 }
