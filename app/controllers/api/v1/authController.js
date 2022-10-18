@@ -48,51 +48,58 @@ async function authorize(req, res, next, allowedRole) {
 
 module.exports = {
     async login(req, res) {
-        const email = req.body.email.toLowerCase();
-        const password = req.body.password;
-        const user = await userService.getByEmail(email);
-
-        if (!user) {
-            res.status(401).json({
+        if (!req.body.email || !req.body.password) {
+            res.status(400).json({
                 status: "failed",
-                message: "Email is not registered"
+                message: "Missing fields required",
             });
-            return;
-        }
+        } else {
+            const email = req.body.email.toLowerCase();
+            const password = req.body.password;
+            const user = await userService.getByEmail(email);
 
-        const isPasswordCorrect = await checkPassword(
-            user.encrypted_pass,
-            password
-        );
+            if (!user) {
+                res.status(401).json({
+                    status: "failed",
+                    message: "Email is not registered"
+                });
+                return;
+            }
 
-        if (!isPasswordCorrect) {
-            res.status(401).json({
-                status: "failed",
-                message: "Wrong password"
-            });
-            return;
-        }
+            const isPasswordCorrect = await checkPassword(
+                user.encrypted_pass,
+                password
+            );
 
-        const token = createToken({
-            id: user.id,
-            email: user.email,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-        });
+            if (!isPasswordCorrect) {
+                res.status(401).json({
+                    status: "failed",
+                    message: "Wrong password"
+                });
+                return;
+            }
 
-        res.status(201).json({
-            status: "success",
-            message: "login successfully",
-            data: {
+            const token = createToken({
                 id: user.id,
-                name: user.name,
                 email: user.email,
-                role: user.role,
-                token,
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
-            }
-        });
+            });
+
+            res.status(201).json({
+                status: "success",
+                message: "login successfully",
+                data: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    token,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt,
+                }
+            });
+        }
     },
 
     // Authorize middleware
