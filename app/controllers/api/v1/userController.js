@@ -32,6 +32,7 @@ async function register(req, res, role) {
             })
             return
         } else {
+            const name = req.body.name;
             const encrypted_pass = await encryptPassword(req.body.password);
             userService.create({ name, email, encrypted_pass, role })
                 .then(user => {
