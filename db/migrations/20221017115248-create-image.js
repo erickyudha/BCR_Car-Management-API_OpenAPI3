@@ -10,10 +10,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       public_id: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       url: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       }
     });
   },

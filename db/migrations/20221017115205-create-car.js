@@ -10,12 +10,15 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       size: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       rent_per_day: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       image_id: {
