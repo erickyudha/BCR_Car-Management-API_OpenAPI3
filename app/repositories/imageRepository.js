@@ -6,7 +6,7 @@ module.exports = {
     },
 
     delete(id) {
-        return Image.destroy(id);
+        return Image.destroy({ where: { id } });
     },
 
     find(id) {

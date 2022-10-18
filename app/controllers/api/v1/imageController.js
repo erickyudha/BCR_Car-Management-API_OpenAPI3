@@ -10,6 +10,7 @@ module.exports = {
                     status: "success",
                     message: "Upload image successfully",
                     data: {
+                        id: result.id,
                         url: result.url,
                         public_id: result.public_id
                     }
@@ -22,5 +23,31 @@ module.exports = {
                         message: err.message
                     })
             })
+    },
+
+    async delete(req, res) {
+        const img = await imageService.get(req.params.id)
+
+        if (!img) {
+            res.status(404).json({
+                status: "failed",
+                message: "Image data not found"
+            })
+        } else {
+            imageService.delete(req.params.id)
+                .then(() => {
+                    res.status(200).json({
+                        status: "success",
+                        message: "Delete image data successfully"
+                    })
+                })
+                .catch(err => {
+                    console.error(err)
+                    res.status(422).json({
+                        status: "failed",
+                        message: err.message
+                    })
+                })
+        }
     }
 }
