@@ -14,7 +14,7 @@ module.exports = {
             })
             .catch((err) => {
                 console.log(err);
-                res.status(400).json({
+                res.status(500).json({
                     status: "error",
                     message: err.message,
                 });
@@ -40,7 +40,7 @@ module.exports = {
                     });
                 })
                 .catch((err) => {
-                    res.status(422).json({
+                    res.status(500).json({
                         status: "error",
                         message: err.message,
                     });
@@ -50,7 +50,7 @@ module.exports = {
 
     create(req, res) {
         if (!req.body.name || !req.body.size || !req.body.rent_per_day) {
-            res.status(400).json({
+            res.status(422).json({
                 status: "failed",
                 message: "Missing required fields",
             })
@@ -69,7 +69,7 @@ module.exports = {
                     });
                 })
                 .catch((err) => {
-                    res.status(422).json({
+                    res.status(500).json({
                         status: "error",
                         message: err.message,
                     });
@@ -98,7 +98,7 @@ module.exports = {
                     });
                 })
                 .catch((err) => {
-                    res.status(422).json({
+                    res.status(500).json({
                         status: "error",
                         message: err.message,
                     });
@@ -123,7 +123,7 @@ module.exports = {
                     });
                 })
                 .catch((err) => {
-                    res.status(422).json({
+                    res.status(500).json({
                         status: "error",
                         message: err.message,
                     });

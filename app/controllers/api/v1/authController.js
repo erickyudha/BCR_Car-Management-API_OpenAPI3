@@ -49,7 +49,7 @@ async function authorize(req, res, next, allowedRole) {
 module.exports = {
     async login(req, res) {
         if (!req.body.email || !req.body.password) {
-            res.status(400).json({
+            res.status(422).json({
                 status: "failed",
                 message: "Missing fields required",
             });

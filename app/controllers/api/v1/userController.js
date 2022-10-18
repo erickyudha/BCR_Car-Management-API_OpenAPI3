@@ -18,7 +18,7 @@ function encryptPassword(password) {
 // Register base handler
 async function register(req, res, role) {
     if (!req.body.name || !req.body.email || !req.body.password) {
-        return res.status(400).json({
+        return res.status(422).json({
             status: "error",
             message: "Missing required fields"
         });
@@ -31,23 +31,31 @@ async function register(req, res, role) {
                 message: "email already registered"
             })
             return
+        } else {
+            const encrypted_pass = await encryptPassword(req.body.password);
+            userService.create({ name, email, encrypted_pass, role })
+                .then(user => {
+                    res.status(201).json({
+                        status: "success",
+                        message: "create user successfully",
+                        data: {
+                            id: user.id,
+                            name: user.name,
+                            email: user.email,
+                            role: role,
+                            createdAt: user.createdAt,
+                            updatedAt: user.updatedAt,
+                        }
+                    });
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        status: "error",
+                        message: err.message
+                    })
+                })
         }
 
-        const name = req.body.name;
-        const encrypted_pass = await encryptPassword(req.body.password);
-        const user = await userService.create({ name, email, encrypted_pass, role });
-        res.status(201).json({
-            status: "success",
-            message: "create user successfully",
-            data: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: role,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt,
-            }
-        });
     }
 }
 
@@ -85,7 +93,7 @@ module.exports = {
                 });
             })
             .catch((err) => {
-                res.status(400).json({
+                res.status(500).json({
                     status: "error",
                     message: err.message,
                 });
