@@ -57,7 +57,12 @@ module.exports = {
         res.status(200).json({
             status: "success",
             message: "Get current user information successfully",
-            data: req.user
+            data: {
+                id: req.user.id,
+                name: req.user.name,
+                email: req.user.email,
+                role: req.user.role,
+            }
         });
     },
 
