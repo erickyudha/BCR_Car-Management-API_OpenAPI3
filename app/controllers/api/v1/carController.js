@@ -35,6 +35,7 @@ module.exports = {
                 .then((car) => {
                     res.status(200).json({
                         status: "success",
+                        message: "Get car data successfully",
                         data: car,
                     });
                 })
@@ -48,25 +49,32 @@ module.exports = {
     },
 
     create(req, res) {
-        carService
-            .create({
-                ...req.body,
-                createdByUser: req.user.id,
-                lastUpdatedByUser: req.user.id
+        if (!req.body.name || !req.body.size || !req.body.rent_per_day) {
+            res.status(400).json({
+                status: "failed",
+                message: "Missing required fields",
             })
-            .then((car) => {
-                res.status(201).json({
-                    status: "success",
-                    message: "Create car data successfully",
-                    data: car,
+        } else {
+            carService
+                .create({
+                    ...req.body,
+                    createdByUser: req.user.id,
+                    lastUpdatedByUser: req.user.id
+                })
+                .then((car) => {
+                    res.status(201).json({
+                        status: "success",
+                        message: "Create car data successfully",
+                        data: car,
+                    });
+                })
+                .catch((err) => {
+                    res.status(422).json({
+                        status: "error",
+                        message: err.message,
+                    });
                 });
-            })
-            .catch((err) => {
-                res.status(422).json({
-                    status: "error",
-                    message: err.message,
-                });
-            });
+        }
     },
 
     async update(req, res) {
