@@ -9,6 +9,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      old_id: {
+        type: Sequelize.INTEGER
+      },
       name: {
         type: Sequelize.STRING
       },
@@ -18,24 +21,16 @@ module.exports = {
       rent_per_day: {
         type: Sequelize.INTEGER
       },
-      createdByUser: {
-        type: Sequelize.INTEGER
-      },
-      lastUpdatedByUser: {
-        type: Sequelize.INTEGER
-      },
-      deletedByUser: {
-        type: Sequelize.INTEGER
-      },
-      deletedAt: {
-        type: Sequelize.DATE
+      createdBy: {
+        type: Sequelize.STRING
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
-        allowNull: false,
+      deletedBy: {
+        type: Sequelize.STRING
+      },
+      deletedAt: {
         type: Sequelize.DATE
       }
     });

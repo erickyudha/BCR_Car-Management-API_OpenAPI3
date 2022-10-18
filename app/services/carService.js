@@ -1,6 +1,7 @@
 const carRepository = require("../repositories/carRepository");
 const userRepository = require("../repositories/userRepository");
 const imageRepository = require("../repositories/imageRepository");
+const carArchiveRepository = require("../repositories/carArchiveRepository");
 
 
 const formatCarData = async (car) => {
@@ -32,8 +33,31 @@ module.exports = {
         return carRepository.update(id, requestBody);
     },
 
-    delete(id) {
-        return carRepository.delete(id);
+    async delete(id, user) {
+        try {
+            const car = await carRepository.find(id);
+            const creator = await userRepository.find(car.createdByUser);
+            const data = {
+                old_id: car.id,
+                name: car.name,
+                size: car.size,
+                rent_per_day: car.rent_per_day,
+                createdBy: creator.name,
+                createdAt: car.createdAt,
+                deletedBy: user.name,
+                deletedAt: new Date(),
+            }
+            carArchiveRepository.create(data)
+                .then(() => {
+                    console.log("Archive car data success");
+                }).catch(err => {
+                    console.log("Archive data error: " + err.message);
+                    throw err
+                })
+            return carRepository.delete(id);
+        } catch (error) {
+            throw error
+        }
     },
 
     async list() {

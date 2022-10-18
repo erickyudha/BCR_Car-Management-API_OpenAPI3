@@ -107,8 +107,7 @@ module.exports = {
                 message: "Car data not found"
             })
         } else {
-            // TODO: ADD DELETED CAR TO CAR ARCHIVE
-            carService.delete(id)
+            carService.delete(id, req.user)
                 .then(() => {
                     res.status(200).json({
                         status: "success",

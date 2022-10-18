@@ -14,16 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   CarArchive.init({
+    old_id: DataTypes.INTEGER,
     name: DataTypes.STRING,
     size: DataTypes.STRING,
     rent_per_day: DataTypes.INTEGER,
-    createdByUser: DataTypes.INTEGER,
-    lastUpdatedByUser: DataTypes.INTEGER,
-    deletedByUser: DataTypes.INTEGER,
+    createdBy: DataTypes.STRING,
+    createdAt: DataTypes.DATE,
+    deletedBy: DataTypes.STRING,
     deletedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'CarArchive',
+    timestamps: false,
   });
   return CarArchive;
 };
