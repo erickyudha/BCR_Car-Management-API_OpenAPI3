@@ -4,6 +4,7 @@ const router = require("../config/routes");
 const fs = require('fs')
 const path = require("path")
 const cors = require('cors');
+const controller = require("./controllers");
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(morgan("dev"))
 
 /** Install JSON request parser */
 app.use(express.json());
+app.use(controller.api.main.onParseError)
 
 /** Install Router */
 app.use(router);
