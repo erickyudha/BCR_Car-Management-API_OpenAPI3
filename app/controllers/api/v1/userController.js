@@ -54,7 +54,11 @@ module.exports = {
     },
 
     async whoAmI(req, res) {
-        res.status(200).json(req.user);
+        res.status(200).json({
+            status: "success",
+            message: "Get current user information successfully",
+            data: req.user
+        });
     },
 
     async list(req, res) {
@@ -70,7 +74,7 @@ module.exports = {
             })
             .catch((err) => {
                 res.status(400).json({
-                    status: "FAIL",
+                    status: "error",
                     message: err.message,
                 });
             });

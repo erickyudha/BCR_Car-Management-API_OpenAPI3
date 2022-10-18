@@ -53,9 +53,9 @@ module.exports = {
         const user = await userService.getByEmail(email);
 
         if (!user) {
-            res.status(404).json({
+            res.status(401).json({
                 status: "failed",
-                message: "Email not found"
+                message: "Email is not registered"
             });
             return;
         }
@@ -85,6 +85,7 @@ module.exports = {
             message: "login successfully",
             data: {
                 id: user.id,
+                name: user.name,
                 email: user.email,
                 role: user.role,
                 token,

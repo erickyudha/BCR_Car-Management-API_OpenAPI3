@@ -19,7 +19,7 @@ module.exports = {
             .catch(err => {
                 res.status(422)
                     .json({
-                        status: "failed",
+                        status: "error",
                         message: err.message
                     })
             })
@@ -44,7 +44,7 @@ module.exports = {
                 .catch(err => {
                     console.error(err)
                     res.status(422).json({
-                        status: "failed",
+                        status: "error",
                         message: err.message
                     })
                 })
