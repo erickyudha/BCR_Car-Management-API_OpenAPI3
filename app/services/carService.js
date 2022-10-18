@@ -53,7 +53,10 @@ module.exports = {
 
     async get(id) {
         const car = await carRepository.find(id)
-        const formattedCar = await formatCarData(car)
-        return formattedCar;
+        if (car) {
+            const formattedCar = await formatCarData(car)
+            return formattedCar;
+        }
+        return null
     },
 };

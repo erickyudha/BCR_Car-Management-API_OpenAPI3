@@ -6,7 +6,7 @@ module.exports = {
     },
 
     delete(id) {
-        return User.destroy(id);
+        return User.destroy({ where: { id } });
     },
 
     find(id) {
