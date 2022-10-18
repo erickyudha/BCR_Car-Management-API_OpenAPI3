@@ -1,49 +1,58 @@
 const express = require("express");
 const controllers = require("../app/controllers");
-const { carController } = require("../app/controllers/api/v1");
 const upload = require("./upload")
 
 const apiRouter = express.Router();
 
+//--------------------------------------------------------------------
 // auth & user control routes
 // * No auth
-apiRouter.post("/api/v1/register", controllers.api.v1.userController.registerMember);
-apiRouter.post("/api/v1/login", controllers.api.v1.authController.login);
+apiRouter.post(["/api/v1/register", "/api/register"],
+    controllers.api.v1.userController.registerMember);
+apiRouter.post(["/api/v1/login", "/api/login"],
+    controllers.api.v1.authController.login);
 
 // * Member auth
-apiRouter.get("/api/v1/whoami",
+apiRouter.get(["/api/v1/whoami", "/api/whoami"],
     controllers.api.v1.authController.authorizeMember,
     controllers.api.v1.userController.whoAmI);
 
 // * Admin auth
-apiRouter.get("/api/v1/users",
+apiRouter.get(["/api/v1/users", "/api/users"],
     controllers.api.v1.authController.authorizeAdmin,
     controllers.api.v1.userController.list);
 
-apiRouter.post("/api/v1/images",
-    controllers.api.v1.authController.authorizeAdmin,
-    upload.single("image"),
-    controllers.api.v1.imageController.upload);
-
 // * Superadmin auth    
-apiRouter.post("/api/v1/admins",
+apiRouter.post(["/api/v1/admins", "/api/admins"],
     controllers.api.v1.authController.authorizeSuper,
     controllers.api.v1.userController.registerAdmin)
 
-
-// car control routes
+//--------------------------------------------------------------------
+// main control routes
 // * member auth
-apiRouter.get("/api/v1/cars",
+apiRouter.get(["/api/v1/cars", "/api/cars"],
     controllers.api.v1.authController.authorizeMember,
     controllers.api.v1.carController.list);
-apiRouter.get("/api/v1/cars/:id",
+apiRouter.get(["/api/v1/cars/:id", "/api/cars/:id"],
     controllers.api.v1.authController.authorizeMember,
     controllers.api.v1.carController.show)
 
 // * admin auth
-apiRouter.post("/api/v1/cars",
+apiRouter.post(["/api/v1/cars", "/api/cars"],
     controllers.api.v1.authController.authorizeAdmin,
     controllers.api.v1.carController.create)
+apiRouter.put(["/api/v1/cars/:id", "/api/cars/:id"],
+    controllers.api.v1.authController.authorizeAdmin,
+    controllers.api.v1.carController.update)
+
+apiRouter.post(["/api/v1/images", "/api/images"],
+    controllers.api.v1.authController.authorizeAdmin,
+    upload.single("image"),
+    controllers.api.v1.imageController.upload);
+apiRouter.delete(["/api/v1/images/:id", "/api/images/:id"],
+    controllers.api.v1.authController.authorizeAdmin,
+    controllers.api.v1.imageController.delete)
+// -------------------------------------------------------------------
 
 // test routes
 // apiRouter.post("/test", controllers.api.v1.userController.checkEmail)
