@@ -85,7 +85,7 @@ module.exports = {
             if (!car) {
                 res.status(404).json({
                     status: "failed",
-                    message: "Car data not found"
+                    message: "Archived car data not found"
                 })
             } else {
                 carService

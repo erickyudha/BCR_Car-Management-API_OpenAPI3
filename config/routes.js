@@ -45,7 +45,7 @@ apiRouter.get(["/api/v1/cars/:id", "/api/cars/:id"],
     controllers.api.v1.carController.show)
 
 apiRouter.get(["/api/v1/images/:id", "/api/images/:id"],
-    controllers.api.v1.authController.authorizeAdmin,
+    controllers.api.v1.authController.authorizeMember,
     controllers.api.v1.imageController.show)
 
 // * admin auth
