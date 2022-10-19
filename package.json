@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "bin/www",
+    "start": "node bin/www",
     "develop": "nodemon -q bin/www",
     "setup": "sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all",
     "superadmin": "sequelize db:seed:undo && sequelize db:seed:all"

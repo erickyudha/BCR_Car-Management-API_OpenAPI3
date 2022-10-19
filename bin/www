@@ -1,8 +1,6 @@
-const host = "localhost"
-const port = process.env.PORT || 8000;
-
+const config = require("../config/server")
 const app = require("../app")
 
 app.listen(port, function () {
-    console.log(`Server is running on http://${host}:${port}`);
+    console.log(`Server is running on http://localhost:${config.port}`);
 });
