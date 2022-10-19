@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userService = require("../../../services/userService");
+const encryption = require("../../../../config/encryption");
 
 
 function checkPassword(encrypted_pass, password) {
@@ -17,7 +18,7 @@ function checkPassword(encrypted_pass, password) {
 }
 
 function createToken(payload) {
-    return jwt.sign(payload, process.env.JWT_SIGNATURE_KEY || "Rahasiasss");
+    return jwt.sign(payload, process.env.JWT_SIGNATURE_KEY || encryption.SIGNATURE_KEY);
 }
 
 // Authorize base handler
@@ -28,7 +29,7 @@ async function authorize(req, res, next, allowedRole) {
         const token = bearerToken.split("Bearer ")[1];
         const tokenPayload = jwt.verify(
             token,
-            process.env.JWT_SIGNATURE_KEY || "Rahasiasss"
+            process.env.JWT_SIGNATURE_KEY || encryption.SIGNATURE_KEY
         );
 
         const user = await userService.get(tokenPayload.id);

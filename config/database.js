@@ -3,7 +3,7 @@ const {
     DB_USERNAME = "postgres",
     DB_PASSWORD = "admin",
     DB_HOST = "localhost",
-    DB_NAME = "bcr_car-management-api",
+    DB_NAME = "car-management-api",
     DB_LOGGING = false
 } = process.env;
 

@@ -2,11 +2,11 @@
 
 const bcrypt = require("bcryptjs");
 const superadmin = require("../../config/superadmin");
-const SALT = 10;
+const encryption = require("../../config/encryption");
 
 function encryptPassword(password) {
   return new Promise((resolve, reject) => {
-    bcrypt.hash(password, SALT, (err, encrypted_pass) => {
+    bcrypt.hash(password, encryption.SALT, (err, encrypted_pass) => {
       if (!!err) {
         reject(err);
         return;
