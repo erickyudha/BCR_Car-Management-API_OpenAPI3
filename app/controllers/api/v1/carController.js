@@ -1,3 +1,4 @@
+const { permanentDelete } = require("../../../repositories/carRepository");
 const carService = require("../../../services/carService");
 
 module.exports = {
@@ -128,7 +129,13 @@ module.exports = {
                     res.status(201).json({
                         status: "success",
                         message: "Create car data successfully",
-                        data: car,
+                        data: {
+                            id: car.id,
+                            name: car.name,
+                            size: car.size,
+                            rent_per_day: car.rent_per_day,
+                            image_id: car.image_id
+                        },
                     });
                 })
                 .catch((err) => {
@@ -151,11 +158,18 @@ module.exports = {
                     message: "Car data not found"
                 })
             } else {
+                const allowedUpdate = ["name", "size", "rent_per_day", "image_id"]
+                for (const key of Object.keys(req.body)) {
+                    if (!allowedUpdate.includes(key)) {
+                        res.status(422).json({
+                            status: "failed",
+                            message: "Invalid field",
+                        })
+                        return
+                    }
+                }
                 carService
-                    .update(req.params.id, {
-                        ...req.body,
-                        lastUpdatedByUser: req.user.id
-                    })
+                    .update(req.params.id, req.user, req.body)
                     .then(() => {
                         res.status(200).json({
                             status: "success",
@@ -195,6 +209,76 @@ module.exports = {
                         res.status(200).json({
                             status: "success",
                             message: "Delete car data successfully"
+                        });
+                    })
+                    .catch((err) => {
+                        res.status(500).json({
+                            status: "error",
+                            message: err.message,
+                        });
+                    });
+            }
+        } catch (err) {
+            res.status(422).json({
+                status: "failed",
+                message: err.message,
+            });
+        }
+    },
+
+    async permanentDelete(req, res) {
+        try {
+            if (isNaN(req.params.id)) throw new Error("Invalid parameter");
+            const id = req.params.id;
+            const car = await carService.forceGet(id)
+
+            if (!car) {
+                res.status(404).json({
+                    status: "failed",
+                    message: "Archived car data not found"
+                })
+            } else {
+                carService.permanentDelete(id)
+                    .then((result) => {
+                        console.log(result)
+                        res.status(200).json({
+                            status: "success",
+                            message: "Destroy car data successfully"
+                        });
+                    })
+                    .catch((err) => {
+                        res.status(500).json({
+                            status: "error",
+                            message: err.message,
+                        });
+                    });
+            }
+        } catch (err) {
+            res.status(422).json({
+                status: "failed",
+                message: err.message,
+            });
+        }
+    },
+
+    async restore(req, res) {
+        try {
+            if (isNaN(req.params.id)) throw new Error("Invalid parameter");
+            const id = req.params.id;
+            const car = await carService.forceGet(id)
+
+            if (!car) {
+                res.status(404).json({
+                    status: "failed",
+                    message: "Archived car data not found"
+                })
+            } else {
+                carService.restore(id, req.user)
+                    .then((result) => {
+                        console.log(result)
+                        res.status(200).json({
+                            status: "success",
+                            message: "Restore car data successfully"
                         });
                     })
                     .catch((err) => {

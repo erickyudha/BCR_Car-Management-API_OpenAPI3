@@ -48,8 +48,11 @@ module.exports = {
         return carRepository.create(requestBody);
     },
 
-    update(id, requestBody) {
-        return carRepository.update(id, requestBody);
+    update(id, user, requestBody) {
+        return carRepository.update(id, {
+            ...requestBody,
+            updatedByUser: user.id
+        });
     },
 
     async delete(id, user) {
@@ -57,6 +60,10 @@ module.exports = {
             carRepository.update(id, { deletedByUser: user.id }),
             carRepository.delete(id)
         ])
+    },
+
+    async permanentDelete(id) {
+        return carRepository.permanentDelete(id);
     },
 
     async listDeleted() {
@@ -105,6 +112,18 @@ module.exports = {
         if (car && car.deletedAt !== null) {
             const formattedCar = await formatDeletedCarData(car)
             return formattedCar;
+        }
+        return null
+    },
+
+    async restore(id, user) {
+        const car = await carRepository.find(id)
+        if (car.deletedAt !== null) {
+            return carRepository.update(id, {
+                deletedByUser: null,
+                deletedAt: null,
+                updatedByUser: user.id
+            })
         }
         return null
     }

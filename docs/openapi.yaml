@@ -33,6 +33,8 @@ paths:
       summary: Register new member
       description: Register new account with member role
       operationId: registerMember
+      security:
+        - {}
       requestBody:
         description: Required fields [name, email, password]
         required: true
@@ -91,6 +93,8 @@ paths:
       summary: Login with account
       description: Login and get bearer token for auth
       operationId: login
+      security:
+        - {}
       requestBody:
         description: Required fields [email, password]
         required: true
@@ -98,6 +102,9 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - email
+                - password
               properties:
                 email:
                   type: string
@@ -154,8 +161,9 @@ paths:
     get:
       tags:
         - user
+      operationId: whoAmI
       summary: Get current user data
-      description: Return curent user data based on bearer token
+      description: "Return current user data based on bearer token \n\n Allowed roles: superadmin, admin, member"
       responses:
         '200':
           description: OK
@@ -192,7 +200,7 @@ paths:
       tags:
         - user
       summary: Get current registered users
-      description: Return list of all users
+      description: "Return list of all users  \n\n Allowed roles: superadmin, admin"
       operationId: getUserList
       responses:
         '200':
@@ -235,8 +243,9 @@ paths:
     post:
       tags:
         - user
+      operationId: createAdmin
       summary: Add new admin
-      description: Add new admin account, can only be accessed by superadmin
+      description: "Add new admin account  \n\n Allowed roles: superadmin"
       requestBody:
         description: Required fields [name, email, password]
         required: true
@@ -259,7 +268,7 @@ paths:
                       type: string
                       example: create user successfully
                     data:
-                      $ref: '#/components/schemas/User'
+                      $ref: '#/components/schemas/Admin'
         '401':
           description: Unauthorized, bearer token invalid or auth level below superadmin
           content:
@@ -299,6 +308,7 @@ paths:
     post:
       tags:
         - media
+      operationId: uploadImage
       summary: Upload image to server
       description: Upload image to cloudinary then store the metadata to database
       requestBody:
@@ -308,6 +318,8 @@ paths:
           multipart/form-data:
             schema:
               type: object
+              required:
+                - image
               properties:
                 image:
                   type: string
@@ -354,6 +366,7 @@ paths:
       tags:
         - media
       summary: Get image data by ID
+      operationId: getImageData
       description: Return image data based on the image ID
       parameters:
         - in: path
@@ -397,6 +410,12 @@ paths:
                   message:
                     type: string
                     example: Image data not found
+        '422':
+          description: Unprocessable Entity, check parameter format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParamMsg'
         default:
           description: Default error response
           content:
@@ -408,6 +427,7 @@ paths:
       tags:
         - media
       summary: Delete image from server by ID
+      operationId: deleteImage
       description: Delete image from cloudinary and metadata from database based on the image ID
       parameters:
         - in: path
@@ -449,6 +469,12 @@ paths:
                   message:
                     type: string
                     example: Image data not found
+        '422':
+          description: Unprocessable Entity, check parameter format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParamMsg'
         default:
           description: Default error response
           content:
@@ -461,6 +487,7 @@ paths:
       tags:
         - cars
       summary: Get car list
+      operationId: getCarList
       description: Return car data list
       responses:
         '200':
@@ -504,14 +531,20 @@ paths:
       tags:
         - cars
       summary: Add new car data
+      operationId: addNewCar
       description: Add new car data to database
       requestBody:
-        description: Required fields [name, size, rent_per_day]
+        description: Required fields [name, size, rent_per_day]. Additional fields except "rent_per_day" are not accepted.
         required: true
         content:
           application/json:
             schema:
               type: object
+              additionalProperties: false
+              required:
+                - name
+                - size
+                - rent_per_day
               properties:
                 name:
                   type: string
@@ -541,17 +574,9 @@ paths:
                     example: success
                   message:
                     type: string
-                    example: Get cars data successfully
+                    example: Create car data successfully
                   data:
-                    type: array
-                    items:
-                     $ref: '#/components/schemas/CarResponse'
-                  meta:
-                    type: object
-                    properties:
-                      total:
-                        type: integer
-                        example: 1
+                    $ref: '#/components/schemas/CarRequest'
         '401':
             description: Unauthorized, bearer token invalid or auth level below admin
             content:
@@ -579,6 +604,7 @@ paths:
       tags:
         - cars
       summary: Get car data by ID
+      operationId: getCarData
       description: Return car data based on the car ID
       parameters:
         - in: path
@@ -622,6 +648,12 @@ paths:
                   message:
                     type: string
                     example: Car data not found
+        '422':
+          description: Unprocessable Entity, check parameter format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParamMsg'
         default:
           description: Default error response
           content:
@@ -633,6 +665,7 @@ paths:
       tags:
         - cars
       summary: Edit car data by ID
+      operationId: editCarData
       description: Modify car data based on the car ID
       parameters:
         - in: path
@@ -682,6 +715,12 @@ paths:
                   message:
                     type: string
                     example: Car data not found
+        '422':
+          description: Unprocessable Entity, check parameter format / allowed fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParamMsg'
         default:
           description: Default error response
           content:
@@ -693,6 +732,7 @@ paths:
       tags:
         - cars
       summary: Delete car data by ID
+      operationId: deleteCarData
       description: Delete car data based on the car ID
       parameters:
         - in: path
@@ -734,6 +774,12 @@ paths:
                   message:
                     type: string
                     example: Car data not found
+        '422':
+          description: Unprocessable Entity, check parameter format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParamMsg'
         default:
           description: Default error response
           content:
@@ -746,6 +792,7 @@ paths:
       tags:
         - archive
       summary: Get archived car data list
+      operationId: getArchivedCarList
       description: Return deleted / archived car data list
       responses:
         '200':
@@ -790,6 +837,7 @@ paths:
       tags:
         - archive
       summary: Get archived car data by ID
+      operationId: getArchivedCarData
       description: Return archived car data based on the car ID
       parameters:
         - in: path
@@ -833,6 +881,134 @@ paths:
                   message:
                     type: string
                     example: Car data not found
+        '422':
+          description: Unprocessable Entity, check parameter format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParamMsg'
+
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrMsg'
+    
+    delete:
+      tags:
+        - archive
+      summary: Destroy archived car data by ID
+      operationId: deleteArchivedCarData
+      description: Destroy permanently archived car data based on the car ID
+      parameters:
+        - in: path
+          name: carId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the car to destroy
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Destroy car data successfully
+        '401':
+          description: Unauthorized, bearer token invalid or auth level below admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMsg'
+        '404':
+          description: Not Found, car Id not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: Archived car data not found
+        '422':
+          description: Unprocessable Entity, check parameter format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParamMsg'
+
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrMsg'
+
+  /archive/cars/{carId}/restore:
+    get:
+      operationId: restoreCar
+      tags:
+        - archive
+      summary: Restore archived car data by ID
+      description: Restore deleted car data based on the car ID
+      parameters:
+        - in: path
+          name: carId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the car to restore
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Restore car data successfully
+        '401':
+          description: Unauthorized, bearer token invalid or auth level below admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMsg'
+        '404':
+          description: Not Found, car Id not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: Archived car data not found
+        '422':
+          description: Unprocessable Entity, check parameter format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParamMsg'
+
         default:
           description: Default error response
           content:
@@ -840,6 +1016,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultErrMsg'
       
+
+
+
 components:
   securitySchemes:
     bearerAuth:
@@ -887,7 +1066,6 @@ components:
         message:
           type: string
           example: Invalid parameter
-
 
     Image:
       type: object
@@ -957,7 +1135,7 @@ components:
           type: string
           format: timestamp
           example: '2022-10-18T11:40:19.301Z'
-          
+
     ArchivedCarResponse:
       type: object
       properties:
@@ -1010,6 +1188,28 @@ components:
             - member
             - admin
             - superadmin
+          example: member
+
+    Admin:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 4
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          format: email
+          example: new@account.com
+        role:
+          type: string
+          enum:
+            - member
+            - admin
+            - superadmin
+          example: admin
             
     SimpleUser:
       type: object
@@ -1023,6 +1223,10 @@ components:
       
     RegisterCred:
       type: object
+      required:
+        - name
+        - email
+        - password
       properties:
         name:
           type: string
