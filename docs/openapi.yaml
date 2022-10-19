@@ -2,14 +2,14 @@ openapi: 3.0.3
 info:
   title: BCR - Car Management API (OpenAPI 3.0)
   version: '1.0'
-  description: "API to manage Binar Car Rental service website. This API is a part of fullstack development course individual project by Binar Academy. \n\n User is divided into three roles: superadmin, admin, member \n\n Superadmin default account details can be found on this project [repository](https://github.com/erickyudha/bcr_car-management-api) documentation. Superadmin account details can also be modified by following the instruction there."
+  description: "API to manage Binar Car Rental service website. This API is a part of fullstack development course individual project by Binar Academy. \n\n User is divided into three roles: superadmin, admin, member \n\n Superadmin default account details can be found on this project [repository](https://github.com/erickyudha/BCR_Car-Management-API_OpenAPI3) documentation. Superadmin account details can also be modified by following the instruction there."
   contact:
     name: erickyudha
     email: erickyudha18@gmail.com
     url: https://www.linkedin.com/in/erickyudha/
   license:
     name: MIT License
-    url: https://github.com/erickyudha/bcr_car-management-api/blob/master/LICENSE
+    url: https://github.com/erickyudha/BCR_Car-Management-API_OpenAPI3/blob/master/LICENSE
 servers:
   - url: http://localhost:8000/api
   - url: http://localhost:8000/api/v1
