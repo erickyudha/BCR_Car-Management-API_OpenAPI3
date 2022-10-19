@@ -18,6 +18,7 @@ Next is to configure server settings. All settings are avaliable on `config` dir
 | cloudinary.js | Cloudinary account secrets and upload picture folder target |
 | database.js | PostgreSQL database account and database details for Sequelize |
 | superadmin.js | Superadmin account data for seeder |
+| encryption.js | Encryption configuration for authentication process. *Avoid changing except when starting fresh |
 | server.js | Server configuration, change server port here only if you really have to. *will need to change server properties in `docs/openapi.json` to use OpenAPI Swagger UI if this is changed. |
 | routes.js  | API routes configuration. *Avoid editing this unless you know what you are doing. |
 | upload.js | Multer configuration. *Avoid editing this unless you know what you are doing. |
