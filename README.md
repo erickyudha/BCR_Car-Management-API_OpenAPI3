@@ -73,7 +73,7 @@ API documentation is available in two different formats:
 
 | Documentation type | Link | Details |
 |--|--|--|
-| OpenAPI Swagger UI | http://localhost:8000 | Swagger UI based on `docs/openapi.json` file. Can be accessed after running the server. |
+| OpenAPI Swagger UI | http://localhost:8000 <br> http://localhost:8000/api-docs | Swagger UI based on `docs/openapi.json` file. Can be accessed after running the server. |
 | Static Documentation | [Here](/docs) | Markdown file documentation |
 
 Authentication and authorization system used are `token-based auth`.
