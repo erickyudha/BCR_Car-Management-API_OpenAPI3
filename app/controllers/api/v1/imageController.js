@@ -2,59 +2,88 @@ const imageService = require("../../../services/imageService");
 
 module.exports = {
     upload(req, res) {
+        const fileBase64 = req.file.buffer.toString("base64");
+        const file = `data:${req.file.mimetype};base64,${fileBase64}`;
+        imageService.upload(file)
+            .then(result => {
+                res.status(201).json({
+                    status: "success",
+                    message: "Upload image successfully",
+                    data: {
+                        id: result.id,
+                        url: result.url,
+                        public_id: result.public_id
+                    }
+                });
+            })
+            .catch(err => {
+                res.status(500)
+                    .json({
+                        status: "error",
+                        message: err.message
+                    })
+            })
+    },
+
+    async delete(req, res) {
         try {
-            const fileBase64 = req.file.buffer.toString("base64");
-            const file = `data:${req.file.mimetype};base64,${fileBase64}`;
-            imageService.upload(file)
-                .then(result => {
-                    res.status(201).json({
-                        status: "success",
-                        message: "Upload image successfully",
-                        data: {
-                            id: result.id,
-                            url: result.url,
-                            public_id: result.public_id
-                        }
-                    });
+            if (isNaN(req.params.id)) throw new Error("Invalid parameter");
+            const img = await imageService.get(req.params.id)
+
+            if (!img) {
+                res.status(404).json({
+                    status: "failed",
+                    message: "Image data not found"
                 })
-                .catch(err => {
-                    res.status(500)
-                        .json({
+            } else {
+                imageService.delete(req.params.id)
+                    .then(() => {
+                        res.status(200).json({
+                            status: "success",
+                            message: "Delete image data successfully"
+                        })
+                    })
+                    .catch(err => {
+                        console.error(err)
+                        res.status(500).json({
                             status: "error",
                             message: err.message
                         })
-                })
-        } catch (error) {
+                    })
+            }
+        } catch (err) {
             res.status(422).json({
                 status: "failed",
-                message: "Missing required fields"
+                message: err.message
             })
         }
     },
 
-    async delete(req, res) {
-        const img = await imageService.get(req.params.id)
-
-        if (!img) {
-            res.status(404).json({
+    async show(req, res) {
+        try {
+            if (isNaN(req.params.id)) throw new Error("Invalid parameter");
+            const img = await imageService.get(req.params.id)
+            if (!img) {
+                res.status(404).json({
+                    status: "failed",
+                    message: "Image data not found"
+                })
+            } else {
+                res.status(200).json({
+                    status: "success",
+                    message: "Get image data successfully",
+                    data: {
+                        id: img.id,
+                        url: img.url,
+                        public_id: img.public_id
+                    }
+                })
+            }
+        } catch (error) {
+            res.status(422).json({
                 status: "failed",
-                message: "Image data not found"
+                message: err.message
             })
-        } else {
-            imageService.delete(req.params.id)
-                .then(() => {
-                    res.status(200).json({
-                        status: "success",
-                        message: "Delete image data successfully"
-                    })
-                })
-                .catch(err => {
-                    console.error(err)
-                    res.status(500).json({
-                        status: "error",
-                        message: err.message
-                    })
-                })
         }
     }
 }

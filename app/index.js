@@ -21,7 +21,9 @@ app.use(morgan("dev"))
 
 /** Install JSON request parser */
 app.use(express.json());
+
 app.use(controller.api.main.onParseError)
+app.use(controller.api.main.onError)
 
 /** Install Router */
 app.use(router);

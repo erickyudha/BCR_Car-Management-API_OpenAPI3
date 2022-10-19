@@ -42,56 +42,72 @@ module.exports = {
     },
 
     async show(req, res) {
-        const id = req.params.id;
-        const car = await carService.get(id)
-        if (!car) {
-            res.status(404).json({
-                status: "failed",
-                message: "Car data not found"
-            })
-        } else {
-            carService
-                .get(id)
-                .then((car) => {
-                    res.status(200).json({
-                        status: "success",
-                        message: "Get car data successfully",
-                        data: car,
-                    });
+        try {
+            if (isNaN(req.params.id)) throw new Error("Invalid parameter");
+            const id = req.params.id;
+            const car = await carService.get(id)
+            if (!car) {
+                res.status(404).json({
+                    status: "failed",
+                    message: "Car data not found"
                 })
-                .catch((err) => {
-                    res.status(500).json({
-                        status: "error",
-                        message: err.message,
+            } else {
+                carService
+                    .get(id)
+                    .then((car) => {
+                        res.status(200).json({
+                            status: "success",
+                            message: "Get car data successfully",
+                            data: car,
+                        });
+                    })
+                    .catch((err) => {
+                        res.status(500).json({
+                            status: "error",
+                            message: err.message,
+                        });
                     });
-                });
+            }
+        } catch (err) {
+            res.status(422).json({
+                status: "failed",
+                message: err.message,
+            });
         }
     },
 
     async forceShow(req, res) {
-        const id = req.params.id;
-        const car = await carService.forceGet(id)
-        if (!car) {
-            res.status(404).json({
-                status: "failed",
-                message: "Car data not found"
-            })
-        } else {
-            carService
-                .forceGet(id)
-                .then((car) => {
-                    res.status(200).json({
-                        status: "success",
-                        message: "Get archived car data successfully",
-                        data: car,
-                    });
+        try {
+            if (isNaN(req.params.id)) throw new Error("Invalid parameter");
+            const id = req.params.id;
+            const car = await carService.forceGet(id)
+            if (!car) {
+                res.status(404).json({
+                    status: "failed",
+                    message: "Car data not found"
                 })
-                .catch((err) => {
-                    res.status(500).json({
-                        status: "error",
-                        message: err.message,
+            } else {
+                carService
+                    .forceGet(id)
+                    .then((car) => {
+                        res.status(200).json({
+                            status: "success",
+                            message: "Get archived car data successfully",
+                            data: car,
+                        });
+                    })
+                    .catch((err) => {
+                        res.status(500).json({
+                            status: "error",
+                            message: err.message,
+                        });
                     });
-                });
+            }
+        } catch (err) {
+            res.status(422).json({
+                status: "failed",
+                message: err.message,
+            });
         }
     },
 
@@ -125,58 +141,74 @@ module.exports = {
     },
 
     async update(req, res) {
-        const id = req.params.id;
-        const car = await carService.get(id)
-        if (!car) {
-            res.status(404).json({
+        try {
+            if (isNaN(req.params.id)) throw new Error("Invalid parameter");
+            const id = req.params.id;
+            const car = await carService.get(id)
+            if (!car) {
+                res.status(404).json({
+                    status: "failed",
+                    message: "Car data not found"
+                })
+            } else {
+                carService
+                    .update(req.params.id, {
+                        ...req.body,
+                        lastUpdatedByUser: req.user.id
+                    })
+                    .then(() => {
+                        res.status(200).json({
+                            status: "success",
+                            message: "Update car data successfully"
+                        });
+                    })
+                    .catch((err) => {
+                        res.status(500).json({
+                            status: "error",
+                            message: err.message,
+                        });
+                    });
+            }
+        } catch (err) {
+            res.status(422).json({
                 status: "failed",
-                message: "Car data not found"
-            })
-        } else {
-            carService
-                .update(req.params.id, {
-                    ...req.body,
-                    lastUpdatedByUser: req.user.id
-                })
-                .then(() => {
-                    res.status(200).json({
-                        status: "success",
-                        message: "Update car data successfully"
-                    });
-                })
-                .catch((err) => {
-                    res.status(500).json({
-                        status: "error",
-                        message: err.message,
-                    });
-                });
+                message: err.message,
+            });
         }
     },
 
     async delete(req, res) {
-        const id = req.params.id;
-        const car = await carService.get(id)
+        try {
+            if (isNaN(req.params.id)) throw new Error("Invalid parameter");
+            const id = req.params.id;
+            const car = await carService.get(id)
 
-        if (!car) {
-            res.status(404).json({
-                status: "failed",
-                message: "Car data not found"
-            })
-        } else {
-            carService.delete(id, req.user)
-                .then((result) => {
-                    console.log(result)
-                    res.status(200).json({
-                        status: "success",
-                        message: "Delete car data successfully"
-                    });
+            if (!car) {
+                res.status(404).json({
+                    status: "failed",
+                    message: "Car data not found"
                 })
-                .catch((err) => {
-                    res.status(500).json({
-                        status: "error",
-                        message: err.message,
+            } else {
+                carService.delete(id, req.user)
+                    .then((result) => {
+                        console.log(result)
+                        res.status(200).json({
+                            status: "success",
+                            message: "Delete car data successfully"
+                        });
+                    })
+                    .catch((err) => {
+                        res.status(500).json({
+                            status: "error",
+                            message: err.message,
+                        });
                     });
-                });
+            }
+        } catch (err) {
+            res.status(422).json({
+                status: "failed",
+                message: err.message,
+            });
         }
     }
 }
