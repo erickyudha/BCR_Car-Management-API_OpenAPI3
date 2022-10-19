@@ -76,6 +76,8 @@ API documentation is available in two different formats:
 | OpenAPI Swagger UI | http://localhost:8000 | Swagger UI based on `docs/openapi.json` file. Can be accessed after running the server. |
 | Static Documentation | [Here](/docs) | Markdown file documentation |
 
+Authentication and authorization system used are `token-based auth`.
+
 ## Database Design
 
 Database model design can be represented by the following diagram:
