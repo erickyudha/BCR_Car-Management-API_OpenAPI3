@@ -79,7 +79,7 @@ module.exports = {
                     }
                 })
             }
-        } catch (error) {
+        } catch (err) {
             res.status(422).json({
                 status: "failed",
                 message: err.message
