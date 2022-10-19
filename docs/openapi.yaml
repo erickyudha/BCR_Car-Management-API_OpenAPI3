@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: BCR - Car Management API (OpenAPI 3.0)
   version: '1.0'
-  description: PLACEHOLDER DESCRIPTION
+  description: "API to manage Binar Car Rental service website. This API is a part of fullstack development course individual project by Binar Academy. \n\n User is divided into three roles: superadmin, admin, member \n\n Superadmin default account details can be found on this project [repository](https://github.com/erickyudha/bcr_car-management-api) documentation. Superadmin account details can also be modified by following the instruction there."
   contact:
     name: erickyudha
     email: erickyudha18@gmail.com
@@ -310,7 +310,7 @@ paths:
         - media
       operationId: uploadImage
       summary: Upload image to server
-      description: Upload image to cloudinary then store the metadata to database
+      description: "Upload image to cloudinary then store the metadata to database \n\n Allowed roles: superadmin, admin"
       requestBody:
         description: Required fields [image]
         required: true
@@ -367,7 +367,7 @@ paths:
         - media
       summary: Get image data by ID
       operationId: getImageData
-      description: Return image data based on the image ID
+      description: "Return image data based on the image ID \n\n Allowed roles: superadmin, admin, member"
       parameters:
         - in: path
           name: imageId
@@ -428,7 +428,7 @@ paths:
         - media
       summary: Delete image from server by ID
       operationId: deleteImage
-      description: Delete image from cloudinary and metadata from database based on the image ID
+      description: "Delete image from cloudinary and metadata from database based on the image ID \n\n Allowed roles: superadmin, admin"
       parameters:
         - in: path
           name: imageId
@@ -488,7 +488,7 @@ paths:
         - cars
       summary: Get car list
       operationId: getCarList
-      description: Return car data list
+      description: "Return car data list \n\n Allowed roles: superadmin, admin, member"
       responses:
         '200':
           description: OK
@@ -532,9 +532,9 @@ paths:
         - cars
       summary: Add new car data
       operationId: addNewCar
-      description: Add new car data to database
+      description: "Add new car data to database \n\n Allowed roles: superadmin, admin"
       requestBody:
-        description: Required fields [name, size, rent_per_day]. Additional fields except "rent_per_day" are not accepted.
+        description: "Required fields [name, size, rent_per_day].\n\n Additional fields except 'rent_per_day' are not accepted."
         required: true
         content:
           application/json:
@@ -562,8 +562,8 @@ paths:
                   type: integer
                   example: 1
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           content:
             application/json:
               schema:
@@ -596,8 +596,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-      
+                $ref: '#/components/schemas/DefaultErrMsg'      
       
   /cars/{carId}:
     get:
@@ -605,7 +604,7 @@ paths:
         - cars
       summary: Get car data by ID
       operationId: getCarData
-      description: Return car data based on the car ID
+      description: "Return car data based on the car ID \n\n Allowed roles: superadmin, admin, member"
       parameters:
         - in: path
           name: carId
@@ -666,7 +665,7 @@ paths:
         - cars
       summary: Edit car data by ID
       operationId: editCarData
-      description: Modify car data based on the car ID
+      description: "Modify car data based on the car ID \n\n Allowed roles: superadmin, admin"
       parameters:
         - in: path
           name: carId
@@ -733,7 +732,7 @@ paths:
         - cars
       summary: Delete car data by ID
       operationId: deleteCarData
-      description: Delete car data based on the car ID
+      description: "Delete car data based on the car ID \n\n Allowed roles: superadmin, admin"
       parameters:
         - in: path
           name: carId
@@ -793,7 +792,7 @@ paths:
         - archive
       summary: Get archived car data list
       operationId: getArchivedCarList
-      description: Return deleted / archived car data list
+      description: "Return deleted / archived car data list \n\n Allowed roles: superadmin, admin"
       responses:
         '200':
           description: OK
@@ -838,7 +837,7 @@ paths:
         - archive
       summary: Get archived car data by ID
       operationId: getArchivedCarData
-      description: Return archived car data based on the car ID
+      description: "Return archived car data based on the car ID \n\n Allowed roles: superadmin, admin"
       parameters:
         - in: path
           name: carId
@@ -859,7 +858,7 @@ paths:
                     example: success
                   message:
                     type: string
-                    example: Get car data successfully
+                    example: Get archived car data successfully
                   data:
                     $ref: '#/components/schemas/ArchivedCarResponse'
         '401':
@@ -880,7 +879,7 @@ paths:
                     example: failed
                   message:
                     type: string
-                    example: Car data not found
+                    example: Archived car data not found
         '422':
           description: Unprocessable Entity, check parameter format
           content:
@@ -900,7 +899,7 @@ paths:
         - archive
       summary: Destroy archived car data by ID
       operationId: deleteArchivedCarData
-      description: Destroy permanently archived car data based on the car ID
+      description: "Destroy permanently archived car data based on the car ID \n\n Allowed roles: superadmin, admin"
       parameters:
         - in: path
           name: carId
@@ -961,7 +960,7 @@ paths:
       tags:
         - archive
       summary: Restore archived car data by ID
-      description: Restore deleted car data based on the car ID
+      description: "Restore deleted car data based on the car ID \n\n Allowed roles: superadmin, admin"
       parameters:
         - in: path
           name: carId
