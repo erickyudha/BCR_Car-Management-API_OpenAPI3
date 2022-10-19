@@ -21,6 +21,26 @@ module.exports = {
             });
     },
 
+    listDeleted(req, res) {
+        carService
+            .listDeleted()
+            .then(({ data, count }) => {
+                res.status(200).json({
+                    status: "success",
+                    message: "Get archived cars data successfully",
+                    data,
+                    meta: { total: count },
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).json({
+                    status: "error",
+                    message: err.message,
+                });
+            });
+    },
+
     async show(req, res) {
         const id = req.params.id;
         const car = await carService.get(id)
@@ -36,6 +56,33 @@ module.exports = {
                     res.status(200).json({
                         status: "success",
                         message: "Get car data successfully",
+                        data: car,
+                    });
+                })
+                .catch((err) => {
+                    res.status(500).json({
+                        status: "error",
+                        message: err.message,
+                    });
+                });
+        }
+    },
+
+    async forceShow(req, res) {
+        const id = req.params.id;
+        const car = await carService.forceGet(id)
+        if (!car) {
+            res.status(404).json({
+                status: "failed",
+                message: "Car data not found"
+            })
+        } else {
+            carService
+                .forceGet(id)
+                .then((car) => {
+                    res.status(200).json({
+                        status: "success",
+                        message: "Get archived car data successfully",
                         data: car,
                     });
                 })
@@ -109,6 +156,7 @@ module.exports = {
     async delete(req, res) {
         const id = req.params.id;
         const car = await carService.get(id)
+
         if (!car) {
             res.status(404).json({
                 status: "failed",
@@ -116,7 +164,8 @@ module.exports = {
             })
         } else {
             carService.delete(id, req.user)
-                .then(() => {
+                .then((result) => {
+                    console.log(result)
                     res.status(200).json({
                         status: "success",
                         message: "Delete car data successfully"

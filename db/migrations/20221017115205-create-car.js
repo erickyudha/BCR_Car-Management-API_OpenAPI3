@@ -30,12 +30,18 @@ module.exports = {
       lastUpdatedByUser: {
         type: Sequelize.INTEGER
       },
+      deletedByUser: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
       },
       updatedAt: {
+        type: Sequelize.DATE,
         allowNull: false,
+      },
+      deletedAt: {
         type: Sequelize.DATE
       }
     });

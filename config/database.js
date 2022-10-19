@@ -4,7 +4,7 @@ const {
     DB_PASSWORD = "admin",
     DB_HOST = "localhost",
     DB_NAME = "bcr_car-management-api",
-    DB_LOGGING = false
+    DB_LOGGING = true
 } = process.env;
 
 module.exports = {

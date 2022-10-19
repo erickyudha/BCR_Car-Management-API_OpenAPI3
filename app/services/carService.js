@@ -1,7 +1,6 @@
 const carRepository = require("../repositories/carRepository");
 const userRepository = require("../repositories/userRepository");
 const imageRepository = require("../repositories/imageRepository");
-const carArchiveRepository = require("../repositories/carArchiveRepository");
 
 
 const formatCarData = async (car) => {
@@ -24,6 +23,26 @@ const formatCarData = async (car) => {
     }
 }
 
+const formatDeletedCarData = async (car) => {
+    const [img, creator, deleter] = await Promise.all([
+        imageRepository.find(car.image_id),
+        userRepository.attributesFind(car.createdByUser, ["id", "name"]),
+        userRepository.attributesFind(car.deletedByUser, ["id", "name"])
+    ])
+
+    return {
+        id: car.id,
+        name: car.name,
+        size: car.size,
+        rent_per_day: car.rent_per_day,
+        image: img,
+        createdBy: creator,
+        createdAt: car.createdAt,
+        deletedBy: deleter,
+        deletedAt: car.deletedAt
+    }
+}
+
 module.exports = {
     create(requestBody) {
         return carRepository.create(requestBody);
@@ -34,37 +53,34 @@ module.exports = {
     },
 
     async delete(id, user) {
+        return Promise.all([
+            carRepository.update(id, { deletedByUser: user.id }),
+            carRepository.delete(id)
+        ])
+    },
+
+    async listDeleted() {
         try {
-            const car = await carRepository.find(id);
-            const creator = await userRepository.find(car.createdByUser);
-            const data = {
-                old_id: car.id,
-                name: car.name,
-                size: car.size,
-                rent_per_day: car.rent_per_day,
-                createdBy: creator.name,
-                createdAt: car.createdAt,
-                deletedBy: user.name,
-                deletedAt: new Date(),
-            }
-            carArchiveRepository.create(data)
-                .then(() => {
-                    console.log("Archive car data success");
-                }).catch(err => {
-                    console.log("Archive data error: " + err.message);
-                    throw err
-                })
-            return carRepository.delete(id);
-        } catch (error) {
-            throw error
+            const cars = await carRepository.findAll();
+            const filteredCars = cars.filter(car => car.deletedAt !== null)
+            const formattedCar = await Promise.all(filteredCars.map(car => formatDeletedCarData(car)))
+            const carCount = formattedCar.length;
+
+            return {
+                data: formattedCar,
+                count: carCount,
+            };
+        } catch (err) {
+            throw err.message;
         }
     },
 
     async list() {
         try {
             const cars = await carRepository.findAll();
-            const formattedCar = await Promise.all(cars.map(car => formatCarData(car)))
-            const carCount = await carRepository.getTotalCar();
+            const filteredCars = cars.filter(car => car.deletedAt === null)
+            const formattedCar = await Promise.all(filteredCars.map(car => formatCarData(car)))
+            const carCount = formattedCar.length;
 
             return {
                 data: formattedCar,
@@ -77,10 +93,19 @@ module.exports = {
 
     async get(id) {
         const car = await carRepository.find(id)
-        if (car) {
+        if (car && car.deletedAt === null) {
             const formattedCar = await formatCarData(car)
             return formattedCar;
         }
         return null
     },
+
+    async forceGet(id) {
+        const car = await carRepository.find(id)
+        if (car && car.deletedAt !== null) {
+            const formattedCar = await formatDeletedCarData(car)
+            return formattedCar;
+        }
+        return null
+    }
 };

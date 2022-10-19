@@ -47,6 +47,13 @@ apiRouter.put(["/api/v1/cars/:id", "/api/cars/:id"],
 apiRouter.delete(["/api/v1/cars/:id", "/api/cars/:id"],
     controllers.api.v1.authController.authorizeAdmin,
     controllers.api.v1.carController.delete)
+apiRouter.get(["/api/v1/archive/cars", "/api/archive/cars"],
+    controllers.api.v1.authController.authorizeAdmin,
+    controllers.api.v1.carController.listDeleted)
+apiRouter.get(["/api/v1/archive/cars/:id", "/api/archive/cars/:id"],
+    controllers.api.v1.authController.authorizeAdmin,
+    controllers.api.v1.carController.forceShow)
+
 
 apiRouter.post(["/api/v1/images", "/api/images"],
     controllers.api.v1.authController.authorizeAdmin,

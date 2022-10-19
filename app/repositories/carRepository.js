@@ -1,4 +1,6 @@
 const { Car } = require("../models");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 module.exports = {
     create(createArgs) {
@@ -10,6 +12,7 @@ module.exports = {
             where: {
                 id,
             },
+            paranoid: false
         });
     },
 
@@ -18,11 +21,11 @@ module.exports = {
     },
 
     find(id) {
-        return Car.findByPk(id);
+        return Car.findByPk(id, { paranoid: false });
     },
 
     findAll() {
-        return Car.findAll();
+        return Car.findAll({ paranoid: false });
     },
 
     getTotalCar() {

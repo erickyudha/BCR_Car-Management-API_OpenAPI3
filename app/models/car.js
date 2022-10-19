@@ -19,10 +19,12 @@ module.exports = (sequelize, DataTypes) => {
     rent_per_day: DataTypes.INTEGER,
     image_id: DataTypes.INTEGER,
     createdByUser: DataTypes.INTEGER,
-    lastUpdatedByUser: DataTypes.INTEGER
+    lastUpdatedByUser: DataTypes.INTEGER,
+    deletedByUser: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Car',
+    paranoid: true
   });
   return Car;
 };
