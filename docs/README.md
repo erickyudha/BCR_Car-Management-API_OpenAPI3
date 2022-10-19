@@ -6,7 +6,7 @@ API to manage Binar Car Rental service website. This API is a part of fullstack 
 
  User is divided into three roles: superadmin, admin, member 
 
- Superadmin default account details can be found on this project [repository](https://github.com/erickyudha/bcr_car-management-api) documentation. Superadmin account details can also be modified by following the instruction there.
+ Superadmin default account details can be found on this project [repository](https://github.com/erickyudha/BCR_Car-Management-API_OpenAPI3) documentation. Superadmin account details can also be modified by following the instruction there.
 
 ## Path Table
 
