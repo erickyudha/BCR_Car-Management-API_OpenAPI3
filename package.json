@@ -6,11 +6,8 @@
   "scripts": {
     "start": "bin/www",
     "develop": "nodemon -q bin/www",
-    "db:create": "sequelize db:create",
-    "db:drop": "sequelize db:drop",
-    "db:migrate": "sequelize db:migrate",
-    "db:rollback": "sequelize db:migrate:undo",
-    "db:seed": "sequelize db:seed:all"
+    "setup": "sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all",
+    "superadmin": "sequelize db:seed:undo && sequelize db:seed:all"
   },
   "author": "Erick Yudha",
   "license": "MIT",
