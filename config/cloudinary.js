@@ -1,4 +1,3 @@
-// Require the Cloudinary library
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
@@ -8,4 +7,9 @@ cloudinary.config({
     secure: true,
 });
 
-module.exports = cloudinary;
+// Edit where picture will be saved in cloudinary (folder)
+const config = {
+    dir: "bcr_car-management-api"
+}
+
+module.exports = { cloudinary, config };
