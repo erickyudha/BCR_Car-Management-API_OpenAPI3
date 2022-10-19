@@ -4,7 +4,7 @@ API to manage Binar Car Rental service website. This API is a part of fullstack 
   
 User is divided into three roles: superadmin, admin, member.  
 
-Superadmin default account details can be found [here](). Superadmin account details can also be modified by following the instruction there.
+Superadmin default account details can be found [here](#about-superadmin-account). Superadmin account details can also be modified by following the instruction there.
 
 ## Setup Server
 
@@ -74,10 +74,11 @@ API documentation is available in two different formats:
 | Documentation type | Link | Details |
 |--|--|--|
 | OpenAPI Swagger UI | http://localhost:8000 | Swagger UI based on `docs/openapi.json` file. Can be accessed after running the server. |
-| Static Documentation | PLACEHOLDER | Markdown file documentation |
+| Static Documentation | [Here](/docs) | Markdown file documentation |
 
 ## Database Design
 
 Database model design can be represented by the following diagram:
 
+![erd image](/docs/erd.png)
 
