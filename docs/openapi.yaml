@@ -534,7 +534,7 @@ paths:
       operationId: addNewCar
       description: "Add new car data to database \n\n Allowed roles: superadmin, admin"
       requestBody:
-        description: "Required fields [name, size, rent_per_day].\n\n Additional fields except 'rent_per_day' are not accepted."
+        description: "Required fields [name, size, rent_per_day].\n\n Additional fields except 'image_id' are not accepted."
         required: true
         content:
           application/json:
