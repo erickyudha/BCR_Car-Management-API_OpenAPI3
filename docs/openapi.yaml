@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: BCR - Car Management API (OpenAPI 3.0)
-  version: '1.0'
+  version: "1.0"
   description: "API to manage Binar Car Rental service website. This API is a part of fullstack development course individual project by Binar Academy. \n\n User is divided into three roles: superadmin, admin, member \n\n Superadmin default account details can be found on this project [repository](https://github.com/erickyudha/BCR_Car-Management-API_OpenAPI3) documentation. Superadmin account details can also be modified by following the instruction there."
   contact:
     name: erickyudha
@@ -24,7 +24,7 @@ tags:
     description: Access archived data
   - name: media
     description: Media data & files operation
-  
+
 paths:
   /register:
     post:
@@ -41,10 +41,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegisterCred'
-              
+              $ref: "#/components/schemas/RegisterCred"
+
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
@@ -58,8 +58,8 @@ paths:
                     type: string
                     example: create user successfully
                   data:
-                    $ref: '#/components/schemas/User'
-        '409':
+                    $ref: "#/components/schemas/User"
+        "409":
           description: Conflict, email already registered
           content:
             application/json:
@@ -72,20 +72,20 @@ paths:
                   message:
                     type: string
                     example: email already registered
-        '422':
+        "422":
           description: Unprocessable Entity, check missing fields from requestBody
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MissingFieldMsg'
-                
+                $ref: "#/components/schemas/MissingFieldMsg"
+
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-  
+                $ref: "#/components/schemas/DefaultErrMsg"
+
   /login:
     post:
       tags:
@@ -114,7 +114,7 @@ paths:
                   type: string
                   example: this_password
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
@@ -128,8 +128,8 @@ paths:
                     type: string
                     example: login successfully
                   data:
-                    $ref: '#/components/schemas/LoginCred'
-        '401':
+                    $ref: "#/components/schemas/LoginCred"
+        "401":
           description: invalid email / password
           content:
             application/json:
@@ -139,24 +139,24 @@ paths:
                   status:
                     type: string
                     example: failed
-                  message: 
+                  message:
                     type: string
                     example: invalid password
-                    
-        '422':
+
+        "422":
           description: Unprocessable Entity, check missing fields from requestBody
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MissingFieldMsg'
-                
+                $ref: "#/components/schemas/MissingFieldMsg"
+
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-  
+                $ref: "#/components/schemas/DefaultErrMsg"
+
   /whoami:
     get:
       tags:
@@ -165,7 +165,7 @@ paths:
       summary: Get current user data
       description: "Return current user data based on bearer token \n\n Allowed roles: superadmin, admin, member"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -179,22 +179,22 @@ paths:
                     type: string
                     example: Get current user information successfully
                   data:
-                    $ref: '#/components/schemas/User'
-                    
-        '401':
+                    $ref: "#/components/schemas/User"
+
+        "401":
           description: Unauthorized, bearer token invalid
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedMsg'
-                
+                $ref: "#/components/schemas/UnauthorizedMsg"
+
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-      
+                $ref: "#/components/schemas/DefaultErrMsg"
+
   /users:
     get:
       tags:
@@ -203,7 +203,7 @@ paths:
       description: "Return list of all users  \n\n Allowed roles: superadmin, admin"
       operationId: getUserList
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -219,26 +219,26 @@ paths:
                   data:
                     type: array
                     items:
-                     $ref: '#/components/schemas/User'
+                      $ref: "#/components/schemas/User"
                   meta:
                     type: object
                     properties:
                       total:
                         type: integer
                         example: 1
-        '401':
+        "401":
           description: Unauthorized, bearer token invalid or auth level below admin
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedMsg'
+                $ref: "#/components/schemas/UnauthorizedMsg"
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-  
+                $ref: "#/components/schemas/DefaultErrMsg"
+
   /admins:
     post:
       tags:
@@ -252,31 +252,31 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegisterCred'
+              $ref: "#/components/schemas/RegisterCred"
       responses:
-        '201':
-            description: Created
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      type: string
-                      example: success
-                    message:
-                      type: string
-                      example: create user successfully
-                    data:
-                      $ref: '#/components/schemas/Admin'
-        '401':
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: create user successfully
+                  data:
+                    $ref: "#/components/schemas/Admin"
+        "401":
           description: Unauthorized, bearer token invalid or auth level below superadmin
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedMsg'
-                
-        '409':
+                $ref: "#/components/schemas/UnauthorizedMsg"
+
+        "409":
           description: Conflict, email already registered
           content:
             application/json:
@@ -289,21 +289,21 @@ paths:
                   message:
                     type: string
                     example: email already registered
-        
-        '422':
+
+        "422":
           description: Unprocessable Entity, check missing fields from requestBody
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MissingFieldMsg'
-        
+                $ref: "#/components/schemas/MissingFieldMsg"
+
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-                
+                $ref: "#/components/schemas/DefaultErrMsg"
+
   /images:
     post:
       tags:
@@ -325,7 +325,7 @@ paths:
                   type: string
                   format: binary
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
@@ -335,32 +335,32 @@ paths:
                   status:
                     type: string
                     example: success
-                  message: 
+                  message:
                     type: string
                     example: Upload image successfully
                   data:
-                    $ref: '#/components/schemas/Image'
-        '401':
+                    $ref: "#/components/schemas/Image"
+        "401":
           description: Unauthorized, bearer token invalid or auth level below admin
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedMsg'
-        
-        '422':
+                $ref: "#/components/schemas/UnauthorizedMsg"
+
+        "422":
           description: Unprocessable Entity, check missing fields from requestBody
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MissingFieldMsg'
-        
+                $ref: "#/components/schemas/MissingFieldMsg"
+
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-  
+                $ref: "#/components/schemas/DefaultErrMsg"
+
   /images/{imageId}:
     get:
       tags:
@@ -376,7 +376,7 @@ paths:
           required: true
           description: Numeric ID of the image to get
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -390,14 +390,14 @@ paths:
                     type: string
                     example: Get image data successfully
                   data:
-                    $ref: '#/components/schemas/Image'
-        '401':
+                    $ref: "#/components/schemas/Image"
+        "401":
           description: Unauthorized, bearer token invalid
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedMsg'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedMsg"
+        "404":
           description: Not Found, image Id not found
           content:
             application/json:
@@ -410,18 +410,18 @@ paths:
                   message:
                     type: string
                     example: Image data not found
-        '422':
+        "422":
           description: Unprocessable Entity, check parameter format
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvalidParamMsg'
+                $ref: "#/components/schemas/InvalidParamMsg"
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
+                $ref: "#/components/schemas/DefaultErrMsg"
 
     delete:
       tags:
@@ -437,7 +437,7 @@ paths:
           required: true
           description: Numeric ID of the image to delete
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -450,13 +450,13 @@ paths:
                   message:
                     type: string
                     example: Delete image data successfully
-        '401':
+        "401":
           description: Unauthorized, bearer token invalid or auth level below admin
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedMsg'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedMsg"
+        "404":
           description: Not Found, image Id not found
           content:
             application/json:
@@ -469,19 +469,19 @@ paths:
                   message:
                     type: string
                     example: Image data not found
-        '422':
+        "422":
           description: Unprocessable Entity, check parameter format
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvalidParamMsg'
+                $ref: "#/components/schemas/InvalidParamMsg"
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-        
+                $ref: "#/components/schemas/DefaultErrMsg"
+
   /cars:
     get:
       tags:
@@ -490,7 +490,7 @@ paths:
       operationId: getCarList
       description: "Return car data list \n\n Allowed roles: superadmin, admin, member"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -506,27 +506,27 @@ paths:
                   data:
                     type: array
                     items:
-                     $ref: '#/components/schemas/CarResponse'
+                      $ref: "#/components/schemas/CarResponse"
                   meta:
                     type: object
                     properties:
                       total:
                         type: integer
                         example: 1
-        '401':
-            description: Unauthorized, bearer token invalid
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/UnauthorizedMsg'
+        "401":
+          description: Unauthorized, bearer token invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedMsg"
 
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-    
+                $ref: "#/components/schemas/DefaultErrMsg"
+
     post:
       tags:
         - cars
@@ -562,7 +562,7 @@ paths:
                   type: integer
                   example: 1
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
@@ -576,28 +576,28 @@ paths:
                     type: string
                     example: Create car data successfully
                   data:
-                    $ref: '#/components/schemas/CarRequest'
-        '401':
-            description: Unauthorized, bearer token invalid or auth level below admin
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/UnauthorizedMsg'
+                    $ref: "#/components/schemas/CarRequest"
+        "401":
+          description: Unauthorized, bearer token invalid or auth level below admin
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedMsg"
 
-        '422':
+        "422":
           description: Unprocessable Entity, check missing fields from requestBody
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MissingFieldMsg'
-        
+                $ref: "#/components/schemas/MissingFieldMsg"
+
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'      
-      
+                $ref: "#/components/schemas/DefaultErrMsg"
+
   /cars/{carId}:
     get:
       tags:
@@ -613,7 +613,7 @@ paths:
           required: true
           description: Numeric ID of the car to get
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -627,14 +627,14 @@ paths:
                     type: string
                     example: Get car data successfully
                   data:
-                    $ref: '#/components/schemas/CarResponse'
-        '401':
+                    $ref: "#/components/schemas/CarResponse"
+        "401":
           description: Unauthorized, bearer token invalid
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedMsg'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedMsg"
+        "404":
           description: Not Found, car Id not found
           content:
             application/json:
@@ -647,19 +647,19 @@ paths:
                   message:
                     type: string
                     example: Car data not found
-        '422':
+        "422":
           description: Unprocessable Entity, check parameter format
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvalidParamMsg'
+                $ref: "#/components/schemas/InvalidParamMsg"
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-    
+                $ref: "#/components/schemas/DefaultErrMsg"
+
     put:
       tags:
         - cars
@@ -678,11 +678,10 @@ paths:
         content:
           aplication/json:
             schema:
-              $ref: '#/components/schemas/CarRequest'
-    
-      
+              $ref: "#/components/schemas/CarRequest"
+
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -695,13 +694,13 @@ paths:
                   message:
                     type: string
                     example: Update car data successfully
-        '401':
+        "401":
           description: Unauthorized, bearer token invalid or auth level below admin
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedMsg'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedMsg"
+        "404":
           description: Not Found, car Id not found
           content:
             application/json:
@@ -714,19 +713,19 @@ paths:
                   message:
                     type: string
                     example: Car data not found
-        '422':
+        "422":
           description: Unprocessable Entity, check parameter format / allowed fields
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvalidParamMsg'
+                $ref: "#/components/schemas/InvalidParamMsg"
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-    
+                $ref: "#/components/schemas/DefaultErrMsg"
+
     delete:
       tags:
         - cars
@@ -741,7 +740,7 @@ paths:
           required: true
           description: Numeric ID of the car to delete
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -754,13 +753,13 @@ paths:
                   message:
                     type: string
                     example: Delete car data successfully
-        '401':
+        "401":
           description: Unauthorized, bearer token invalid or auth level below admin
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedMsg'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedMsg"
+        "404":
           description: Not Found, car Id not found
           content:
             application/json:
@@ -773,19 +772,19 @@ paths:
                   message:
                     type: string
                     example: Car data not found
-        '422':
+        "422":
           description: Unprocessable Entity, check parameter format
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvalidParamMsg'
+                $ref: "#/components/schemas/InvalidParamMsg"
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-    
+                $ref: "#/components/schemas/DefaultErrMsg"
+
   /archive/cars:
     get:
       tags:
@@ -794,7 +793,7 @@ paths:
       operationId: getArchivedCarList
       description: "Return deleted / archived car data list \n\n Allowed roles: superadmin, admin"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -810,27 +809,27 @@ paths:
                   data:
                     type: array
                     items:
-                     $ref: '#/components/schemas/ArchivedCarResponse'
+                      $ref: "#/components/schemas/ArchivedCarResponse"
                   meta:
                     type: object
                     properties:
                       total:
                         type: integer
                         example: 1
-        '401':
-            description: Unauthorized, bearer token invalid or auth level below admin
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/UnauthorizedMsg'
+        "401":
+          description: Unauthorized, bearer token invalid or auth level below admin
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedMsg"
 
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-  
+                $ref: "#/components/schemas/DefaultErrMsg"
+
   /archive/cars/{carId}:
     get:
       tags:
@@ -846,7 +845,7 @@ paths:
           required: true
           description: Numeric ID of the car to get
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -860,14 +859,14 @@ paths:
                     type: string
                     example: Get archived car data successfully
                   data:
-                    $ref: '#/components/schemas/ArchivedCarResponse'
-        '401':
+                    $ref: "#/components/schemas/ArchivedCarResponse"
+        "401":
           description: Unauthorized, bearer token invalid or auth level below admin
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedMsg'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedMsg"
+        "404":
           description: Not Found, car Id not found
           content:
             application/json:
@@ -880,20 +879,20 @@ paths:
                   message:
                     type: string
                     example: Archived car data not found
-        '422':
+        "422":
           description: Unprocessable Entity, check parameter format
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvalidParamMsg'
+                $ref: "#/components/schemas/InvalidParamMsg"
 
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-    
+                $ref: "#/components/schemas/DefaultErrMsg"
+
     delete:
       tags:
         - archive
@@ -908,7 +907,7 @@ paths:
           required: true
           description: Numeric ID of the car to destroy
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -921,13 +920,13 @@ paths:
                   message:
                     type: string
                     example: Destroy car data successfully
-        '401':
+        "401":
           description: Unauthorized, bearer token invalid or auth level below admin
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedMsg'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedMsg"
+        "404":
           description: Not Found, car Id not found
           content:
             application/json:
@@ -940,19 +939,19 @@ paths:
                   message:
                     type: string
                     example: Archived car data not found
-        '422':
+        "422":
           description: Unprocessable Entity, check parameter format
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvalidParamMsg'
+                $ref: "#/components/schemas/InvalidParamMsg"
 
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
+                $ref: "#/components/schemas/DefaultErrMsg"
 
   /archive/cars/{carId}/restore:
     get:
@@ -969,7 +968,7 @@ paths:
           required: true
           description: Numeric ID of the car to restore
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -982,13 +981,13 @@ paths:
                   message:
                     type: string
                     example: Restore car data successfully
-        '401':
+        "401":
           description: Unauthorized, bearer token invalid or auth level below admin
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnauthorizedMsg'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedMsg"
+        "404":
           description: Not Found, car Id not found
           content:
             application/json:
@@ -1001,30 +1000,27 @@ paths:
                   message:
                     type: string
                     example: Archived car data not found
-        '422':
+        "422":
           description: Unprocessable Entity, check parameter format
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvalidParamMsg'
+                $ref: "#/components/schemas/InvalidParamMsg"
 
         default:
           description: Default error response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultErrMsg'
-      
-
-
+                $ref: "#/components/schemas/DefaultErrMsg"
 
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: JWT 
-      
+      bearerFormat: JWT
+
   schemas:
     DefaultErrMsg:
       type: object
@@ -1035,7 +1031,7 @@ components:
         message:
           type: string
           example: Error message
-          
+
     UnauthorizedMsg:
       type: object
       properties:
@@ -1045,7 +1041,7 @@ components:
         message:
           type: string
           example: Unauthorized
-    
+
     MissingFieldMsg:
       type: object
       properties:
@@ -1079,7 +1075,7 @@ components:
         public_id:
           type: integer
           example: phqnlmh3b7ocuwtdpfvi
-    
+
     CarRequest:
       type: object
       properties:
@@ -1101,7 +1097,7 @@ components:
         image_id:
           type: integer
           example: 1
-        
+
     CarResponse:
       type: object
       properties:
@@ -1121,19 +1117,19 @@ components:
           type: integer
           example: 50000
         image:
-          $ref: '#/components/schemas/Image'
+          $ref: "#/components/schemas/Image"
         createdBy:
-          $ref: '#/components/schemas/SimpleUser'
+          $ref: "#/components/schemas/SimpleUser"
         createdAt:
           type: string
           format: timestamp
-          example: '2022-10-18T11:40:19.301Z'
+          example: "2022-10-18T11:40:19.301Z"
         updatedBy:
-          $ref: '#/components/schemas/SimpleUser'
+          $ref: "#/components/schemas/SimpleUser"
         updatedAt:
           type: string
           format: timestamp
-          example: '2022-10-18T11:40:19.301Z'
+          example: "2022-10-18T11:40:19.301Z"
 
     ArchivedCarResponse:
       type: object
@@ -1154,20 +1150,20 @@ components:
           type: integer
           example: 50000
         image:
-          $ref: '#/components/schemas/Image'
+          $ref: "#/components/schemas/Image"
         createdBy:
-          $ref: '#/components/schemas/SimpleUser'
+          $ref: "#/components/schemas/SimpleUser"
         createdAt:
           type: string
           format: timestamp
-          example: '2022-10-18T11:40:19.301Z'
+          example: "2022-10-18T11:40:19.301Z"
         deletedBy:
-          $ref: '#/components/schemas/SimpleUser'
+          $ref: "#/components/schemas/SimpleUser"
         deletedAt:
           type: string
           format: timestamp
-          example: '2022-10-18T11:40:19.301Z'
-    
+          example: "2022-10-18T11:40:19.301Z"
+
     User:
       type: object
       properties:
@@ -1209,7 +1205,7 @@ components:
             - admin
             - superadmin
           example: admin
-            
+
     SimpleUser:
       type: object
       properties:
@@ -1219,7 +1215,7 @@ components:
         name:
           type: string
           example: John Doe
-      
+
     RegisterCred:
       type: object
       required:
@@ -1237,7 +1233,7 @@ components:
         password:
           type: string
           example: this_password
-    
+
     LoginCred:
       type: object
       properties:
@@ -1262,6 +1258,5 @@ components:
           format: token
           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJtZW1iZXJAbWVtYmVyLmNvbSIsImNyZWF0ZWRBdCI6IjIwMjItMTAtMThUMDY6MzA6NTguOTg3WiIsInVwZGF0ZWRBdCI6IjIwMjItMTAtMThUMDY6MzA6NTguOTg3WiIsImlhdCI6MTY2NjA4MzEyOH0.k_SEHG41C-4cX4ruRRLOaLZqDZBNpTmMtYgGGw0XqAA"
 
-  
 security:
-- bearerAuth: []  
+  - bearerAuth: []
