@@ -802,7 +802,7 @@
                 "operationId": "addNewCar",
                 "description": "Add new car data to database \n\n Allowed roles: superadmin, admin",
                 "requestBody": {
-                    "description": "Required fields [name, size, rent_per_day].\n\n Additional fields except 'image_id' are not accepted.",
+                    "description": "Required fields [name, size, rent_per_day]",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -1011,7 +1011,7 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "New updated car data value",
+                    "description": "Allowed fields to update: [name, size, rent_per_day, image_id]",
                     "content": {
                         "aplication/json": {
                             "schema": {
